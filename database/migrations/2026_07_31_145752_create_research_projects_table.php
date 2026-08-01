@@ -12,27 +12,31 @@ return new class extends Migration
     public function up(): void
 {
     Schema::create('research_projects', function (Blueprint $table) {
+
         $table->id();
 
         $table->string('title');
 
         $table->text('description');
 
-        $table->string('research_area');
-
         $table->string('department');
 
-        $table->foreignId('created_by')
-              ->constrained('users')
-              ->onDelete('cascade');
+        $table->string('research_area');
+
+        $table->date('deadline');
 
         $table->enum('status', [
-            'pending',
-            'approved',
-            'completed'
-        ])->default('pending');
+            'Open',
+            'Closed',
+            'Completed'
+        ])->default('Open');
+
+        $table->foreignId('user_id')
+              ->constrained()
+              ->onDelete('cascade');
 
         $table->timestamps();
+
     });
 }
 

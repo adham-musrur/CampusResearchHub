@@ -19,12 +19,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role',
-    'department',
-    'student_id',
+        'name',
+        'email',
+        'password',
+        'role',
+        'department',
+        'student_id',
     ];
 
     /**
@@ -48,5 +48,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relationship: One user can have many research projects
+    public function researchProjects()
+    {
+        return $this->hasMany(ResearchProject::class);
     }
 }
