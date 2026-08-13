@@ -8,58 +8,104 @@ use Illuminate\Http\Request;
 class ResearchProjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all research projects.
      */
     public function index()
     {
-        //
+        $projects = ResearchProject::latest()->get();
+
+        return view('projects.index', compact('projects'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show create project form.
      */
     public function create()
     {
-        //
+        return view('projects.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a new research project.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'department' => 'required',
+            'research_area' => 'required',
+            'deadline' => 'required|date',
+        ]);
+
+        ResearchProject::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'department' => $request->department,
+            'research_area' => $request->research_area,
+            'deadline' => $request->deadline,
+            'status' => 'pending',
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect()
+            ->route('projects.index')
+            ->with('success', 'Project created successfully!');
     }
 
     /**
-     * Display the specified resource.
+     * Display one research project.
      */
-    public function show(ResearchProject $researchProject)
+    public function show(ResearchProject $project)
     {
-        //
+        return view('projects.show', compact('project'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show edit project form.
      */
-    public function edit(ResearchProject $researchProject)
+    public function edit(ResearchProject $project)
     {
-        //
+        return view('projects.edit', compact('project'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update research project.
      */
-    public function update(Request $request, ResearchProject $researchProject)
+    public function update(Request $request, ResearchProject $project)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'department' => 'required',
+            'research_area' => 'required',
+            'deadline' => 'required|date',
+            'status' => 'required|in:pending,approved,completed',
+        ]);
+
+        $project->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'department' => $request->department,
+            'research_area' => $request->research_area,
+            'deadline' => $request->deadline,
+            'status' => $request->status,
+        ]);
+
+        return redirect()
+            ->route('projects.show', $project)
+            ->with('success', 'Project updated successfully!');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete research project.
      */
-    public function destroy(ResearchProject $researchProject)
+    public function destroy(ResearchProject $project)
     {
-        //
+        $project->delete();
+
+        return redirect()
+            ->route('projects.index')
+            ->with('success', 'Project deleted successfully!');
     }
 }

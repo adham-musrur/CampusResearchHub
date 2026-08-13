@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\ResearchProject;
+use App\Models\ResearchPaper;
+use App\Models\Dataset;
+use App\Models\ResearchUpdate;
+use App\Models\Discussion;
 
 class DashboardController extends Controller
 {
@@ -10,24 +14,63 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->role == 'student') {
+        $stats = [
+            'projects' => ResearchProject::count(),
+            'papers' => ResearchPaper::count(),
+            'datasets' => Dataset::count(),
+            'updates' => ResearchUpdate::count(),
+            'discussions' => Discussion::count(),
+        ];
 
-            return view('dashboard.student');
+        $recentProjects = ResearchProject::latest()
+            ->take(5)
+            ->get();
 
-        } elseif ($user->role == 'faculty') {
+        $recentPapers = ResearchPaper::with('author')
+            ->latest()
+            ->take(5)
+            ->get();
 
-            return view('dashboard.faculty');
+        $recentUpdates = ResearchUpdate::latest()
+            ->take(5)
+            ->get();
 
-        } elseif ($user->role == 'supervisor') {
-
-            return view('dashboard.supervisor');
-
-        } elseif ($user->role == 'admin') {
-
-            return view('dashboard.admin');
-
+        if ($user->role === 'student') {
+            return view('dashboard.student', compact(
+                'stats',
+                'recentProjects',
+                'recentPapers',
+                'recentUpdates'
+            ));
         }
 
-        return abort(403);
+        if ($user->role === 'faculty') {
+            return view('dashboard.faculty', compact(
+                'stats',
+                'recentProjects',
+                'recentPapers',
+                'recentUpdates'
+            ));
+        }
+
+        if ($user->role === 'supervisor') {
+            return view('dashboard.supervisor', compact(
+                'stats',
+                'recentProjects',
+                'recentPapers',
+                'recentUpdates'
+            ));
+        }
+
+        if ($user->role === 'admin') {
+            return view('dashboard.admin', compact(
+                'stats',
+                'recentProjects',
+                'recentPapers',
+                'recentUpdates'
+            ));
+        }
+
+        abort(403);
     }
 }
