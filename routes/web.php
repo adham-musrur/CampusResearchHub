@@ -5,9 +5,11 @@ use App\Http\Controllers\DatasetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResearchPaperController;
 use App\Http\Controllers\ResearchProjectController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ResearchUpdateController;
 use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\UserController;
+
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +40,24 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 */
 
 Route::middleware('auth')->group(function () {
+
+    // Admin Users
+    Route::prefix('admin')->name('admin.')->group(function () {
+
+        Route::resource('users', UserController::class)
+            ->except(['show']);
+
+    });
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::resource('users', UserController::class)
+            ->except(['show']);
+
+    });
+
 
     // Research Projects
     Route::resource('projects', ResearchProjectController::class);
@@ -80,34 +100,34 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
-        // Research Updates
-
-Route::resource('updates', ResearchUpdateController::class)
-    ->only([
-        'index',
-        'create',
-        'store',
-        'show',
-        'destroy'
-    ]);
 
 
-// Project Discussions
+    // Research Updates
+    Route::resource('updates', ResearchUpdateController::class)
+        ->only([
+            'index',
+            'create',
+            'store',
+            'show',
+            'destroy'
+        ]);
 
-Route::get(
-    '/projects/{project}/discussions',
-    [DiscussionController::class, 'index']
-)->name('projects.discussions');
 
-Route::post(
-    '/projects/{project}/discussions',
-    [DiscussionController::class, 'store']
-)->name('projects.discussions.store');
+    // Project Discussions
+    Route::get(
+        '/projects/{project}/discussions',
+        [DiscussionController::class, 'index']
+    )->name('projects.discussions');
 
-Route::delete(
-    '/discussions/{discussion}',
-    [DiscussionController::class, 'destroy']
-)->name('discussions.destroy');
+    Route::post(
+        '/projects/{project}/discussions',
+        [DiscussionController::class, 'store']
+    )->name('projects.discussions.store');
+
+    Route::delete(
+        '/discussions/{discussion}',
+        [DiscussionController::class, 'destroy']
+    )->name('discussions.destroy');
 
 });
 
