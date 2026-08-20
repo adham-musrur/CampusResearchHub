@@ -7,9 +7,10 @@ use App\Http\Controllers\ResearchPaperController;
 use App\Http\Controllers\ResearchProjectController;
 use App\Http\Controllers\ResearchUpdateController;
 use App\Http\Controllers\DiscussionController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\UserController;
 
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -35,19 +36,14 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 /*
 |--------------------------------------------------------------------------
-| Authenticated Routes
+| Admin Routes
 |--------------------------------------------------------------------------
+|
+| IMPORTANT:
+| Only authenticated administrators can access these routes.
+|
 */
 
-Route::middleware('auth')->group(function () {
-
-    // Admin Users
-    Route::prefix('admin')->name('admin.')->group(function () {
-
-        Route::resource('users', UserController::class)
-            ->except(['show']);
-
-    });
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -59,70 +55,134 @@ Route::middleware(['auth', 'admin'])
     });
 
 
-    // Research Projects
-    Route::resource('projects', ResearchProjectController::class);
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
 
 
-    // Research Papers
-    Route::resource('papers', ResearchPaperController::class)
-        ->only([
-            'index',
-            'create',
-            'store',
-            'show',
-            'destroy'
-        ]);
+    /*
+    |--------------------------------------------------------------------------
+    | Research Projects
+    |--------------------------------------------------------------------------
+    */
 
-    Route::get('/papers/{paper}/download', [ResearchPaperController::class, 'download'])
-        ->name('papers.download');
+    Route::resource(
+        'projects',
+        ResearchProjectController::class
+    );
 
 
-    // Datasets
-    Route::resource('datasets', DatasetController::class)
-        ->only([
-            'index',
-            'create',
-            'store',
-            'show',
-            'destroy'
-        ]);
+    /*
+    |--------------------------------------------------------------------------
+    | Research Papers
+    |--------------------------------------------------------------------------
+    */
 
-    Route::get('/datasets/{dataset}/download', [DatasetController::class, 'download'])
-        ->name('datasets.download');
-
-
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
-
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
-    Route::delete('/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
+    Route::resource(
+        'papers',
+        ResearchPaperController::class
+    )->only([
+        'index',
+        'create',
+        'store',
+        'show',
+        'destroy'
+    ]);
 
 
-    // Research Updates
-    Route::resource('updates', ResearchUpdateController::class)
-        ->only([
-            'index',
-            'create',
-            'store',
-            'show',
-            'destroy'
-        ]);
+    Route::get(
+        '/papers/{paper}/download',
+        [ResearchPaperController::class, 'download']
+    )->name('papers.download');
 
 
-    // Project Discussions
+    /*
+    |--------------------------------------------------------------------------
+    | Datasets
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource(
+        'datasets',
+        DatasetController::class
+    )->only([
+        'index',
+        'create',
+        'store',
+        'show',
+        'destroy'
+    ]);
+
+
+    Route::get(
+        '/datasets/{dataset}/download',
+        [DatasetController::class, 'download']
+    )->name('datasets.download');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Profile
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/profile',
+        [ProfileController::class, 'edit']
+    )->name('profile.edit');
+
+
+    Route::patch(
+        '/profile',
+        [ProfileController::class, 'update']
+    )->name('profile.update');
+
+
+    Route::delete(
+        '/profile',
+        [ProfileController::class, 'destroy']
+    )->name('profile.destroy');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Research Updates
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource(
+        'updates',
+        ResearchUpdateController::class
+    )->only([
+        'index',
+        'create',
+        'store',
+        'show',
+        'destroy'
+    ]);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Project Discussions
+    |--------------------------------------------------------------------------
+    */
+
     Route::get(
         '/projects/{project}/discussions',
         [DiscussionController::class, 'index']
     )->name('projects.discussions');
 
+
     Route::post(
         '/projects/{project}/discussions',
         [DiscussionController::class, 'store']
     )->name('projects.discussions.store');
+
 
     Route::delete(
         '/discussions/{discussion}',
@@ -131,5 +191,11 @@ Route::middleware(['auth', 'admin'])
 
 });
 
+
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+*/
 
 require __DIR__.'/auth.php';

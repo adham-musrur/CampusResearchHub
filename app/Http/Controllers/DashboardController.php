@@ -14,6 +14,85 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
+        /*
+        |--------------------------------------------------------------------------
+        | STUDENT DASHBOARD
+        |--------------------------------------------------------------------------
+        */
+if ($user->role === 'student') {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Specific Data
+    |--------------------------------------------------------------------------
+    */
+
+    $studentProjects = ResearchProject::where('user_id', $user->id)
+        ->latest()
+        ->get();
+
+
+    $studentPapers = ResearchPaper::where('author_id', $user->id)
+        ->with('author')
+        ->latest()
+        ->get();
+
+
+    $studentDatasets = Dataset::where('uploaded_by', $user->id)
+        ->latest()
+        ->get();
+
+
+    $recentUpdates = ResearchUpdate::latest()
+        ->take(5)
+        ->get();
+
+
+
+    $stats = [
+
+        'projects' => $studentProjects->count(),
+
+        'papers' => $studentPapers->count(),
+
+        'datasets' => $studentDatasets->count(),
+
+        'updates' => ResearchUpdate::count(),
+
+        'discussions' => Discussion::count(),
+
+    ];
+
+
+
+    $recentProjects = $studentProjects->take(5);
+
+
+    $recentPapers = $studentPapers->take(5);
+
+
+
+    return view('dashboard.student', compact(
+
+        'stats',
+
+        'recentProjects',
+
+        'recentPapers',
+
+        'recentUpdates'
+
+    ));
+
+}
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | OTHER DASHBOARDS
+        |--------------------------------------------------------------------------
+        */
+
         $stats = [
             'projects' => ResearchProject::count(),
             'papers' => ResearchPaper::count(),
@@ -35,16 +114,9 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        if ($user->role === 'student') {
-            return view('dashboard.student', compact(
-                'stats',
-                'recentProjects',
-                'recentPapers',
-                'recentUpdates'
-            ));
-        }
 
         if ($user->role === 'faculty') {
+
             return view('dashboard.faculty', compact(
                 'stats',
                 'recentProjects',
@@ -53,7 +125,9 @@ class DashboardController extends Controller
             ));
         }
 
+
         if ($user->role === 'supervisor') {
+
             return view('dashboard.supervisor', compact(
                 'stats',
                 'recentProjects',
@@ -62,7 +136,9 @@ class DashboardController extends Controller
             ));
         }
 
+
         if ($user->role === 'admin') {
+
             return view('dashboard.admin', compact(
                 'stats',
                 'recentProjects',
@@ -70,6 +146,7 @@ class DashboardController extends Controller
                 'recentUpdates'
             ));
         }
+
 
         abort(403);
     }

@@ -20,7 +20,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show create user form.
+     * Show the form for creating a new user.
      */
     public function create()
     {
@@ -28,7 +28,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a new user.
+     * Store a new admin user.
      */
     public function store(Request $request)
     {
@@ -46,12 +46,7 @@ class UserController extends Controller
 
             'role' => [
                 'required',
-                Rule::in([
-                    'student',
-                    'faculty',
-                    'supervisor',
-                    'admin',
-                ]),
+                Rule::in(['admin']),
             ],
         ]);
 
@@ -59,12 +54,12 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => $validated['role'],
+            'role' => 'admin',
         ]);
 
         return redirect()
             ->route('admin.users.index')
-            ->with('success', 'User created successfully!');
+            ->with('success', 'Admin user created successfully!');
     }
 
     /**

@@ -11,15 +11,62 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     /**
-     * Display all users.
-     */
-    public function index()
-    {
-        $users = User::latest()->get();
+ * Display all users with search, role filter and pagination.
+ */
+public function index(Request $request)
+{
+    $search = $request->input('search');
+    $role = $request->input('role');
 
-        return view('admin.users.index', compact('users'));
-    }
+    $users = User::query()
 
+        // Search by name or email
+        ->when($search, function ($query, $search) {
+
+            $query->where(function ($query) use ($search) {
+
+                $query->where(
+                    'name',
+                    'like',
+                    '%' . $search . '%'
+                )
+
+                ->orWhere(
+                    'email',
+                    'like',
+                    '%' . $search . '%'
+                );
+
+            });
+
+        })
+
+        // Filter by role
+        ->when($role, function ($query, $role) {
+
+            $query->where('role', $role);
+
+        })
+
+        // Latest users first
+        ->latest()
+
+        // 10 users per page
+        ->paginate(10)
+
+        // Keep search and role in pagination links
+        ->withQueryString();
+
+
+    return view(
+        'admin.users.index',
+        compact(
+            'users',
+            'search',
+            'role'
+        )
+    );
+}
     /**
      * Show create user form.
      */
