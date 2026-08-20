@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,6 +13,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +29,7 @@ class User extends Authenticatable
         'student_id',
     ];
 
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -37,8 +40,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -50,9 +54,25 @@ class User extends Authenticatable
         ];
     }
 
-    // Relationship: One user can have many research projects
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+
+    // One user can create many research projects
     public function researchProjects()
     {
         return $this->hasMany(ResearchProject::class);
     }
+
+
+    // One user can have many project memberships
+    public function projectMemberships()
+    {
+        return $this->hasMany(ProjectMember::class);
+    }
+
 }

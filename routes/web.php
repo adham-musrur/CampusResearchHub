@@ -8,6 +8,7 @@ use App\Http\Controllers\ResearchProjectController;
 use App\Http\Controllers\ResearchUpdateController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ProjectMemberController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -64,18 +65,28 @@ Route::middleware(['auth', 'admin'])
 Route::middleware('auth')->group(function () {
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Research Projects
-    |--------------------------------------------------------------------------
-    */
+   /*
+|--------------------------------------------------------------------------
+| Research Projects
+|--------------------------------------------------------------------------
+*/
 
-    Route::resource(
-        'projects',
-        ResearchProjectController::class
-    );
+Route::resource(
+    'projects',
+    ResearchProjectController::class
+);
 
 
+Route::post(
+    '/projects/{project}/members',
+    [ProjectMemberController::class, 'store']
+)->name('projects.members.store');
+
+
+Route::delete(
+    '/projects/{project}/members/{member}',
+    [ProjectMemberController::class, 'destroy']
+)->name('projects.members.destroy');
     /*
     |--------------------------------------------------------------------------
     | Research Papers

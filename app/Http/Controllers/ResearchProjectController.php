@@ -57,9 +57,11 @@ class ResearchProjectController extends Controller
      * Display one research project.
      */
     public function show(ResearchProject $project)
-    {
-        return view('projects.show', compact('project'));
-    }
+{
+    $project->load('members.user');
+
+    return view('projects.show', compact('project'));
+}
 
     /**
      * Show edit project form.

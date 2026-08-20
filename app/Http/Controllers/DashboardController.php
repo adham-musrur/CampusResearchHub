@@ -7,147 +7,255 @@ use App\Models\ResearchPaper;
 use App\Models\Dataset;
 use App\Models\ResearchUpdate;
 use App\Models\Discussion;
+use App\Models\ProjectMember;
+
 
 class DashboardController extends Controller
 {
+
     public function index()
     {
+
         $user = auth()->user();
+
+
 
         /*
         |--------------------------------------------------------------------------
         | STUDENT DASHBOARD
         |--------------------------------------------------------------------------
         */
-if ($user->role === 'student') {
-
-    /*
-    |--------------------------------------------------------------------------
-    | Student Specific Data
-    |--------------------------------------------------------------------------
-    */
-
-    $studentProjects = ResearchProject::where('user_id', $user->id)
-        ->latest()
-        ->get();
 
 
-    $studentPapers = ResearchPaper::where('author_id', $user->id)
-        ->with('author')
-        ->latest()
-        ->get();
-
-
-    $studentDatasets = Dataset::where('uploaded_by', $user->id)
-        ->latest()
-        ->get();
-
-
-    $recentUpdates = ResearchUpdate::latest()
-        ->take(5)
-        ->get();
+        if ($user->role === 'student') {
 
 
 
-    $stats = [
-
-        'projects' => $studentProjects->count(),
-
-        'papers' => $studentPapers->count(),
-
-        'datasets' => $studentDatasets->count(),
-
-        'updates' => ResearchUpdate::count(),
-
-        'discussions' => Discussion::count(),
-
-    ];
+            $studentProjects = ResearchProject::where('user_id', $user->id)
+                ->latest()
+                ->get();
 
 
 
-    $recentProjects = $studentProjects->take(5);
+            $memberProjects = ProjectMember::where('user_id', $user->id)
+                ->with('project')
+                ->latest()
+                ->get();
 
 
-    $recentPapers = $studentPapers->take(5);
+
+            $studentPapers = ResearchPaper::where('author_id', $user->id)
+                ->with('author')
+                ->latest()
+                ->get();
 
 
 
-    return view('dashboard.student', compact(
+            $studentDatasets = Dataset::where('uploaded_by', $user->id)
+                ->latest()
+                ->get();
 
-        'stats',
 
-        'recentProjects',
 
-        'recentPapers',
+            $recentUpdates = ResearchUpdate::latest()
+                ->take(5)
+                ->get();
 
-        'recentUpdates'
 
-    ));
 
-}
+
+
+            $stats = [
+
+                'projects' => $studentProjects->count(),
+
+                'team_projects' => $memberProjects->count(),
+
+                'papers' => $studentPapers->count(),
+
+                'datasets' => $studentDatasets->count(),
+
+            ];
+
+
+
+
+
+            return view('dashboard.student', compact(
+
+                'stats',
+
+                'studentProjects',
+
+                'memberProjects',
+
+                'studentPapers',
+
+                'studentDatasets',
+
+                'recentUpdates'
+
+            ));
+
+
+        }
+
+
+
 
 
         /*
         |--------------------------------------------------------------------------
-        | OTHER DASHBOARDS
+        | FACULTY DASHBOARD
         |--------------------------------------------------------------------------
         */
-
-        $stats = [
-            'projects' => ResearchProject::count(),
-            'papers' => ResearchPaper::count(),
-            'datasets' => Dataset::count(),
-            'updates' => ResearchUpdate::count(),
-            'discussions' => Discussion::count(),
-        ];
-
-        $recentProjects = ResearchProject::latest()
-            ->take(5)
-            ->get();
-
-        $recentPapers = ResearchPaper::with('author')
-            ->latest()
-            ->take(5)
-            ->get();
-
-        $recentUpdates = ResearchUpdate::latest()
-            ->take(5)
-            ->get();
 
 
         if ($user->role === 'faculty') {
 
+
+            $facultyProjects = ResearchProject::where('user_id',$user->id)
+                ->latest()
+                ->get();
+
+
+
+            $facultyPapers = ResearchPaper::where('author_id',$user->id)
+                ->latest()
+                ->get();
+
+
+
+            $facultyDatasets = Dataset::where('uploaded_by',$user->id)
+                ->latest()
+                ->get();
+
+
+
+
+            $stats = [
+
+                'projects' => $facultyProjects->count(),
+
+                'papers' => $facultyPapers->count(),
+
+                'datasets' => $facultyDatasets->count(),
+
+            ];
+
+
+
+
             return view('dashboard.faculty', compact(
+
                 'stats',
-                'recentProjects',
-                'recentPapers',
-                'recentUpdates'
+
+                'facultyProjects',
+
+                'facultyPapers',
+
+                'facultyDatasets'
+
             ));
+
+
         }
+
+
+
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SUPERVISOR DASHBOARD
+        |--------------------------------------------------------------------------
+        */
 
 
         if ($user->role === 'supervisor') {
 
+
+
+            $supervisedProjects = ProjectMember::where('user_id',$user->id)
+                ->where('member_role','Supervisor')
+                ->with('project')
+                ->get();
+
+
+
+
+            $stats = [
+
+                'projects' => $supervisedProjects->count(),
+
+                'members' => ProjectMember::count(),
+
+                'updates' => ResearchUpdate::count(),
+
+            ];
+
+
+
+
             return view('dashboard.supervisor', compact(
+
                 'stats',
-                'recentProjects',
-                'recentPapers',
-                'recentUpdates'
+
+                'supervisedProjects'
+
             ));
+
+
         }
+
+
+
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ADMIN DASHBOARD
+        |--------------------------------------------------------------------------
+        */
 
 
         if ($user->role === 'admin') {
 
+
+            $stats = [
+
+                'projects' => ResearchProject::count(),
+
+                'papers' => ResearchPaper::count(),
+
+                'datasets' => Dataset::count(),
+
+                'updates' => ResearchUpdate::count(),
+
+                'discussions' => Discussion::count(),
+
+            ];
+
+
+
+
             return view('dashboard.admin', compact(
-                'stats',
-                'recentProjects',
-                'recentPapers',
-                'recentUpdates'
+
+                'stats'
+
             ));
+
+
         }
 
 
+
+
         abort(403);
+
+
     }
+
 }
