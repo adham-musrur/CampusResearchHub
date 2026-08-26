@@ -9,14 +9,72 @@ use Illuminate\Support\Facades\Storage;
 
 class DatasetController extends Controller
 {
-    public function index()
-    {
-        $datasets = Dataset::with(['project', 'uploader'])
-            ->latest()
-            ->get();
+   /**
+ * Display all datasets with search and filtering.
+ */
+public function index(Request $request)
+{
 
-        return view('datasets.index', compact('datasets'));
-    }
+    $search = $request->search;
+    $fileType = $request->file_type;
+
+
+
+    $datasets = Dataset::with(['project', 'uploader'])
+
+
+        // Search dataset name and description
+        ->when($search, function ($query, $search) {
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where(
+                    'dataset_name',
+                    'like',
+                    '%' . $search . '%'
+                )
+
+                ->orWhere(
+                    'description',
+                    'like',
+                    '%' . $search . '%'
+                );
+
+            });
+
+        })
+
+
+        // File type filter
+        ->when($fileType, function ($query, $fileType) {
+
+            $query->where('file_type', $fileType);
+
+        })
+
+
+        ->latest()
+
+        ->paginate(10)
+
+        ->withQueryString();
+
+
+
+    $fileTypes = Dataset::select('file_type')
+        ->distinct()
+        ->pluck('file_type');
+
+
+
+    return view('datasets.index', compact(
+        'datasets',
+        'fileTypes',
+        'search',
+        'fileType'
+    ));
+
+}
 
     public function create()
     {

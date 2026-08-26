@@ -39,7 +39,68 @@
                 </p>
 
             </div>
+            {{-- Search and Filter --}}
 
+<form method="GET"
+action="{{ route('datasets.index') }}"
+class="bg-white dark:bg-gray-800 shadow rounded-xl p-5 mb-6">
+
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+
+<input
+type="text"
+name="search"
+value="{{ $search ?? '' }}"
+placeholder="Search datasets..."
+class="border rounded-lg px-3 py-2">
+
+
+
+<select
+name="file_type"
+class="border rounded-lg px-3 py-2">
+
+
+<option value="">
+All File Types
+</option>
+
+
+@foreach($fileTypes as $type)
+
+<option value="{{ $type }}"
+@if(($fileType ?? '') == $type)
+selected
+@endif
+>
+
+{{ strtoupper($type) }}
+
+</option>
+
+
+@endforeach
+
+
+</select>
+
+
+
+
+<button
+class="bg-blue-600 text-white rounded-lg px-4 py-2">
+
+Search
+
+</button>
+
+
+</div>
+
+
+</form>
 
             @if($datasets->count())
 
@@ -145,5 +206,11 @@
         </div>
 
     </div>
+    <div class="mt-8">
+
+{{ $datasets->links() }}
+
+</div>
+
 
 </x-app-layout>

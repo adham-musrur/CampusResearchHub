@@ -9,10 +9,15 @@ use App\Http\Controllers\ResearchUpdateController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProjectMemberController;
-
+use App\Http\Controllers\PublicResearchController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ResearchSearchController;
 
 
+Route::get(
+    '/research/search',
+    [ResearchSearchController::class,'index']
+)->name('research.search');
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -202,7 +207,10 @@ Route::delete(
 
 });
 
-
+Route::get(
+    '/research',
+    [PublicResearchController::class, 'index']
+)->name('research.public');
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes

@@ -9,16 +9,67 @@ use Illuminate\Support\Facades\Storage;
 class ResearchPaperController extends Controller
 {
     /**
-     * Display all research papers.
-     */
-    public function index()
-    {
-        $papers = ResearchPaper::with('author')
-            ->latest()
-            ->get();
+ * Display all research papers with search and filtering.
+ */
+public function index(Request $request)
+{
 
-        return view('papers.index', compact('papers'));
-    }
+    $search = $request->search;
+    $category = $request->category;
+
+
+
+    $papers = ResearchPaper::with('author')
+
+
+        // Search title and abstract
+        ->when($search, function ($query, $search) {
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('title', 'like', '%' . $search . '%')
+
+                ->orWhere(
+                    'abstract',
+                    'like',
+                    '%' . $search . '%'
+                );
+
+            });
+
+        })
+
+
+        // Category filter
+        ->when($category, function ($query, $category) {
+
+            $query->where('category', $category);
+
+        })
+
+
+        ->latest()
+
+        ->paginate(10)
+
+        ->withQueryString();
+
+
+
+    $categories = ResearchPaper::select('category')
+        ->distinct()
+        ->pluck('category');
+
+
+
+    return view('papers.index', compact(
+        'papers',
+        'categories',
+        'search',
+        'category'
+    ));
+
+}
 
     /**
      * Show upload form.

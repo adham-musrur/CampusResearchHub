@@ -8,15 +8,73 @@ use Illuminate\Http\Request;
 class ResearchProjectController extends Controller
 {
     /**
-     * Display all research projects.
-     */
-    public function index()
-    {
-        $projects = ResearchProject::latest()->get();
+ * Display all research projects with search and filters.
+ */
+public function index(Request $request)
+{
 
-        return view('projects.index', compact('projects'));
-    }
+    $search = $request->search;
+    $department = $request->department;
+    $status = $request->status;
 
+
+    $projects = ResearchProject::query()
+
+
+        // Search title, description, research area
+        ->when($search, function ($query, $search) {
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('title', 'like', '%' . $search . '%')
+
+                ->orWhere('description', 'like', '%' . $search . '%')
+
+                ->orWhere('research_area', 'like', '%' . $search . '%');
+
+            });
+
+        })
+
+
+        // Department filter
+        ->when($department, function ($query, $department) {
+
+            $query->where('department', $department);
+
+        })
+
+
+        // Status filter
+        ->when($status, function ($query, $status) {
+
+            $query->where('status', $status);
+
+        })
+
+
+        ->latest()
+
+        ->paginate(10)
+
+        ->withQueryString();
+
+
+
+    $departments = ResearchProject::select('department')
+        ->distinct()
+        ->pluck('department');
+
+
+    return view('projects.index', compact(
+        'projects',
+        'departments',
+        'search',
+        'department',
+        'status'
+    ));
+
+}
     /**
      * Show create project form.
      */
