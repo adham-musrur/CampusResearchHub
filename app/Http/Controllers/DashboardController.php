@@ -18,23 +18,16 @@ class DashboardController extends Controller
 
         $user = auth()->user();
 
+        $role = strtolower($user->role);
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | STUDENT DASHBOARD
-        |--------------------------------------------------------------------------
-        */
 
-
-        if ($user->role === 'student') {
-
+        if ($role === 'student') {
 
 
             $studentProjects = ResearchProject::where('user_id', $user->id)
                 ->latest()
                 ->get();
-
 
 
             $memberProjects = ProjectMember::where('user_id', $user->id)
@@ -43,12 +36,9 @@ class DashboardController extends Controller
                 ->get();
 
 
-
             $studentPapers = ResearchPaper::where('author_id', $user->id)
-                ->with('author')
                 ->latest()
                 ->get();
-
 
 
             $studentDatasets = Dataset::where('uploaded_by', $user->id)
@@ -56,12 +46,9 @@ class DashboardController extends Controller
                 ->get();
 
 
-
             $recentUpdates = ResearchUpdate::latest()
                 ->take(5)
                 ->get();
-
-
 
 
 
@@ -79,57 +66,35 @@ class DashboardController extends Controller
 
 
 
-
-
             return view('dashboard.student', compact(
-
                 'stats',
-
                 'studentProjects',
-
                 'memberProjects',
-
                 'studentPapers',
-
                 'studentDatasets',
-
                 'recentUpdates'
-
             ));
-
 
         }
 
 
 
+        if ($role === 'faculty') {
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | FACULTY DASHBOARD
-        |--------------------------------------------------------------------------
-        */
-
-
-        if ($user->role === 'faculty') {
-
-
-            $facultyProjects = ResearchProject::where('user_id',$user->id)
+            $facultyProjects = ResearchProject::where('user_id', $user->id)
                 ->latest()
                 ->get();
 
 
-
-            $facultyPapers = ResearchPaper::where('author_id',$user->id)
+            $facultyPapers = ResearchPaper::where('author_id', $user->id)
                 ->latest()
                 ->get();
 
 
-
-            $facultyDatasets = Dataset::where('uploaded_by',$user->id)
+            $facultyDatasets = Dataset::where('uploaded_by', $user->id)
                 ->latest()
                 ->get();
-
 
 
 
@@ -145,43 +110,24 @@ class DashboardController extends Controller
 
 
 
-
             return view('dashboard.faculty', compact(
-
                 'stats',
-
                 'facultyProjects',
-
                 'facultyPapers',
-
                 'facultyDatasets'
-
             ));
-
 
         }
 
 
 
+        if ($role === 'supervisor') {
 
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | SUPERVISOR DASHBOARD
-        |--------------------------------------------------------------------------
-        */
-
-
-        if ($user->role === 'supervisor') {
-
-
-
-            $supervisedProjects = ProjectMember::where('user_id',$user->id)
-                ->where('member_role','Supervisor')
+            $supervisedProjects = ProjectMember::where('user_id', $user->id)
+                ->where('member_role', 'Supervisor')
                 ->with('project')
                 ->get();
-
 
 
 
@@ -197,31 +143,16 @@ class DashboardController extends Controller
 
 
 
-
             return view('dashboard.supervisor', compact(
-
                 'stats',
-
                 'supervisedProjects'
-
             ));
-
 
         }
 
 
 
-
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | ADMIN DASHBOARD
-        |--------------------------------------------------------------------------
-        */
-
-
-        if ($user->role === 'admin') {
+        if ($role === 'admin') {
 
 
             $stats = [
@@ -240,21 +171,13 @@ class DashboardController extends Controller
 
 
 
-
-            return view('dashboard.admin', compact(
-
-                'stats'
-
-            ));
-
+            return view('dashboard.admin', compact('stats'));
 
         }
 
 
 
-
         abort(403);
-
 
     }
 

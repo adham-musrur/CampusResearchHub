@@ -7,87 +7,81 @@ use Illuminate\Http\Request;
 
 class ResearchProjectController extends Controller
 {
+
     /**
- * Display all research projects with search and filters.
- */
-public function index(Request $request)
-{
+     * Display all research projects with search and filters.
+     */
+    public function index(Request $request)
+    {
+        $search = $request->search;
+        $department = $request->department;
+        $status = $request->status;
 
-    $search = $request->search;
-    $department = $request->department;
-    $status = $request->status;
+        $projects = ResearchProject::query()
 
+            ->when($search, function ($query, $search) {
 
-    $projects = ResearchProject::query()
+                $query->where(function ($q) use ($search) {
 
+                    $q->where('title', 'like', '%' . $search . '%')
+                      ->orWhere('description', 'like', '%' . $search . '%')
+                      ->orWhere('research_area', 'like', '%' . $search . '%');
 
-        // Search title, description, research area
-        ->when($search, function ($query, $search) {
+                });
 
-            $query->where(function ($q) use ($search) {
+            })
 
-                $q->where('title', 'like', '%' . $search . '%')
+            ->when($department, function ($query, $department) {
 
-                ->orWhere('description', 'like', '%' . $search . '%')
+                $query->where('department', $department);
 
-                ->orWhere('research_area', 'like', '%' . $search . '%');
+            })
 
-            });
+            ->when($status, function ($query, $status) {
 
-        })
+                $query->where('status', $status);
 
+            })
 
-        // Department filter
-        ->when($department, function ($query, $department) {
-
-            $query->where('department', $department);
-
-        })
-
-
-        // Status filter
-        ->when($status, function ($query, $status) {
-
-            $query->where('status', $status);
-
-        })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
 
-        ->latest()
-
-        ->paginate(10)
-
-        ->withQueryString();
+        $departments = ResearchProject::select('department')
+            ->distinct()
+            ->pluck('department');
 
 
+        return view('projects.index', compact(
+            'projects',
+            'departments',
+            'search',
+            'department',
+            'status'
+        ));
+    }
 
-    $departments = ResearchProject::select('department')
-        ->distinct()
-        ->pluck('department');
 
-
-    return view('projects.index', compact(
-        'projects',
-        'departments',
-        'search',
-        'department',
-        'status'
-    ));
-
-}
     /**
      * Show create project form.
      */
     public function create()
     {
+        $this->authorize('create', ResearchProject::class);
+
         return view('projects.create');
     }
+
 
     /**
      * Store a new research project.
      */
     public function store(Request $request)
     {
+        $this->authorize('create', ResearchProject::class);
+
+
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
@@ -95,6 +89,7 @@ public function index(Request $request)
             'research_area' => 'required',
             'deadline' => 'required|date',
         ]);
+
 
         ResearchProject::create([
             'title' => $request->title,
@@ -106,34 +101,43 @@ public function index(Request $request)
             'user_id' => auth()->id(),
         ]);
 
+
         return redirect()
             ->route('projects.index')
             ->with('success', 'Project created successfully!');
     }
 
+
     /**
      * Display one research project.
      */
     public function show(ResearchProject $project)
-{
-    $project->load('members.user');
+    {
+        $project->load('members.user');
 
-    return view('projects.show', compact('project'));
-}
+        return view('projects.show', compact('project'));
+    }
+
 
     /**
      * Show edit project form.
      */
     public function edit(ResearchProject $project)
     {
+        $this->authorize('update', $project);
+
         return view('projects.edit', compact('project'));
     }
+
 
     /**
      * Update research project.
      */
     public function update(Request $request, ResearchProject $project)
     {
+        $this->authorize('update', $project);
+
+
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
@@ -142,6 +146,7 @@ public function index(Request $request)
             'deadline' => 'required|date',
             'status' => 'required|in:pending,approved,completed',
         ]);
+
 
         $project->update([
             'title' => $request->title,
@@ -152,20 +157,27 @@ public function index(Request $request)
             'status' => $request->status,
         ]);
 
+
         return redirect()
             ->route('projects.show', $project)
             ->with('success', 'Project updated successfully!');
     }
+
 
     /**
      * Delete research project.
      */
     public function destroy(ResearchProject $project)
     {
+        $this->authorize('delete', $project);
+
+
         $project->delete();
+
 
         return redirect()
             ->route('projects.index')
             ->with('success', 'Project deleted successfully!');
     }
+
 }

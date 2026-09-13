@@ -8,82 +8,83 @@ use Illuminate\Support\Facades\Storage;
 
 class ResearchPaperController extends Controller
 {
+
     /**
- * Display all research papers with search and filtering.
- */
-public function index(Request $request)
-{
+     * Display all research papers with search and filtering.
+     */
+    public function index(Request $request)
+    {
 
-    $search = $request->search;
-    $category = $request->category;
-
-
-
-    $papers = ResearchPaper::with('author')
+        $search = $request->search;
+        $category = $request->category;
 
 
-        // Search title and abstract
-        ->when($search, function ($query, $search) {
+        $papers = ResearchPaper::with('author')
 
-            $query->where(function ($q) use ($search) {
+            ->when($search, function ($query, $search) {
 
-                $q->where('title', 'like', '%' . $search . '%')
+                $query->where(function ($q) use ($search) {
 
-                ->orWhere(
-                    'abstract',
-                    'like',
-                    '%' . $search . '%'
-                );
+                    $q->where('title', 'like', '%' . $search . '%')
+                        ->orWhere(
+                            'abstract',
+                            'like',
+                            '%' . $search . '%'
+                        );
 
-            });
+                });
 
-        })
-
-
-        // Category filter
-        ->when($category, function ($query, $category) {
-
-            $query->where('category', $category);
-
-        })
+            })
 
 
-        ->latest()
+            ->when($category, function ($query, $category) {
 
-        ->paginate(10)
+                $query->where('category', $category);
 
-        ->withQueryString();
+            })
+
+
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
 
 
-    $categories = ResearchPaper::select('category')
-        ->distinct()
-        ->pluck('category');
+        $categories = ResearchPaper::select('category')
+            ->distinct()
+            ->pluck('category');
 
 
 
-    return view('papers.index', compact(
-        'papers',
-        'categories',
-        'search',
-        'category'
-    ));
+        return view('papers.index', compact(
+            'papers',
+            'categories',
+            'search',
+            'category'
+        ));
 
-}
+    }
+
 
     /**
      * Show upload form.
      */
     public function create()
     {
+        $this->authorize('create', ResearchPaper::class);
+
         return view('papers.create');
     }
+
 
     /**
      * Store a new research paper.
      */
     public function store(Request $request)
     {
+        $this->authorize('create', ResearchPaper::class);
+
+
         $request->validate([
             'title' => 'required|string|max:255',
             'abstract' => 'required|string',
@@ -92,8 +93,10 @@ public function index(Request $request)
             'category' => 'required|string|max:255',
         ]);
 
+
         $filePath = $request->file('paper_file')
             ->store('research-papers', 'public');
+
 
         ResearchPaper::create([
             'title' => $request->title,
@@ -104,10 +107,13 @@ public function index(Request $request)
             'author_id' => auth()->id(),
         ]);
 
+
         return redirect()
             ->route('papers.index')
             ->with('success', 'Research paper uploaded successfully!');
+
     }
+
 
     /**
      * Display one research paper.
@@ -119,14 +125,18 @@ public function index(Request $request)
         return view('papers.show', compact('paper'));
     }
 
+
     /**
      * Download paper PDF.
      */
     public function download(ResearchPaper $paper)
     {
         if (!Storage::disk('public')->exists($paper->paper_file)) {
+
             abort(404, 'Paper file not found.');
+
         }
+
 
         return Storage::disk('public')->download(
             $paper->paper_file,
@@ -134,19 +144,30 @@ public function index(Request $request)
         );
     }
 
+
     /**
      * Delete research paper.
      */
     public function destroy(ResearchPaper $paper)
     {
+
+        $this->authorize('delete', $paper);
+
+
         if (Storage::disk('public')->exists($paper->paper_file)) {
+
             Storage::disk('public')->delete($paper->paper_file);
+
         }
 
+
         $paper->delete();
+
 
         return redirect()
             ->route('papers.index')
             ->with('success', 'Research paper deleted successfully!');
+
     }
+
 }

@@ -2,57 +2,87 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
+
     use HasFactory, Notifiable;
 
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
+
         'name',
+
         'email',
+
         'password',
+
         'role',
+
         'department',
+
         'student_id',
+
     ];
 
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+
     protected $hidden = [
+
         'password',
+
         'remember_token',
+
     ];
 
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+
     protected function casts(): array
     {
+
         return [
+
             'email_verified_at' => 'datetime',
+
             'password' => 'hashed',
+
         ];
+
     }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Role Helper
+    |--------------------------------------------------------------------------
+    */
+
+
+    public function hasRole($role): bool
+    {
+
+        return strtolower($this->role) === strtolower($role);
+
+    }
+
+
+
+    public function hasAnyRole(array $roles): bool
+    {
+
+        return in_array(
+            strtolower($this->role),
+            array_map('strtolower', $roles)
+        );
+
+    }
+
 
 
     /*
@@ -62,17 +92,77 @@ class User extends Authenticatable
     */
 
 
-    // One user can create many research projects
+    // User created research projects
     public function researchProjects()
     {
-        return $this->hasMany(ResearchProject::class);
+
+        return $this->hasMany(
+            ResearchProject::class
+        );
+
     }
 
 
-    // One user can have many project memberships
+
+    // Project memberships
     public function projectMemberships()
     {
-        return $this->hasMany(ProjectMember::class);
+
+        return $this->hasMany(
+            ProjectMember::class
+        );
+
+    }
+
+
+
+    // Uploaded research papers
+    public function researchPapers()
+    {
+
+        return $this->hasMany(
+            ResearchPaper::class,
+            'author_id'
+        );
+
+    }
+
+
+
+    // Uploaded datasets
+    public function datasets()
+    {
+
+        return $this->hasMany(
+            Dataset::class,
+            'uploaded_by'
+        );
+
+    }
+
+
+
+    // Published research updates
+    public function researchUpdates()
+    {
+
+        return $this->hasMany(
+            ResearchUpdate::class,
+            'published_by'
+        );
+
+    }
+
+
+
+    // Discussions
+    public function discussions()
+    {
+
+        return $this->hasMany(
+            Discussion::class
+        );
+
     }
 
 }

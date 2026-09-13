@@ -17,17 +17,7 @@ class ProjectMemberController extends Controller
     public function store(Request $request, ResearchProject $project)
     {
 
-        // Permission check
-
-        if (!in_array(
-            strtolower(auth()->user()->role),
-            ['faculty', 'supervisor', 'admin']
-        )) {
-
-            abort(403);
-
-        }
-
+        $this->authorize('manageMembers', $project);
 
 
         $request->validate([
@@ -46,10 +36,7 @@ class ProjectMemberController extends Controller
 
 
 
-
-
         // Faculty can only add Students
-
         if (
             strtolower(auth()->user()->role) === 'faculty'
             &&
@@ -62,11 +49,7 @@ class ProjectMemberController extends Controller
 
 
 
-
-
-
         // Prevent duplicate member
-
         $exists = ProjectMember::where('project_id', $project->id)
             ->where('user_id', $request->user_id)
             ->exists();
@@ -82,12 +65,6 @@ class ProjectMemberController extends Controller
 
 
 
-
-
-
-
-        // Create project member
-
         ProjectMember::create([
 
             'project_id' => $project->id,
@@ -100,14 +77,7 @@ class ProjectMemberController extends Controller
 
 
 
-
-
-
-
-        // Send notification to new member
-
         $user = User::find($request->user_id);
-
 
 
         if ($user) {
@@ -120,18 +90,11 @@ class ProjectMemberController extends Controller
 
 
 
-
-
-
-
         return redirect()
             ->back()
             ->with('success', 'Member added successfully.');
 
     }
-
-
-
 
 
 
@@ -145,25 +108,11 @@ class ProjectMemberController extends Controller
     ) {
 
 
-        // Permission check
-
-        if (!in_array(
-            strtolower(auth()->user()->role),
-            ['faculty', 'supervisor', 'admin']
-        )) {
-
-            abort(403);
-
-        }
-
-
-
-
+        $this->authorize('manageMembers', $project);
 
 
 
         // Make sure member belongs to this project
-
         if ($member->project_id !== $project->id) {
 
             abort(403);
@@ -172,15 +121,7 @@ class ProjectMemberController extends Controller
 
 
 
-
-
-
-
         $member->delete();
-
-
-
-
 
 
 
@@ -189,6 +130,5 @@ class ProjectMemberController extends Controller
             ->with('success', 'Member removed successfully.');
 
     }
-
 
 }
