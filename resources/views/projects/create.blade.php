@@ -1,80 +1,253 @@
 <x-app-layout>
 
-    <div class="max-w-4xl mx-auto mt-8 bg-white shadow rounded p-6">
+<div class="max-w-5xl mx-auto space-y-8">
 
-        <h2 class="text-2xl font-bold mb-6">
+
+    {{-- Header --}}
+
+    <div class="bg-gradient-to-r from-teal-700 to-cyan-600
+    rounded-3xl p-8 text-white shadow-xl">
+
+
+        <h1 class="text-3xl font-bold">
+
             Create Research Project
-        </h2>
 
-        <form action="{{ route('projects.store') }}" method="POST">
+        </h1>
+
+
+        <p class="mt-2 text-teal-100">
+
+            Submit a new academic research project and start collaboration.
+
+        </p>
+
+
+    </div>
+
+
+
+
+
+
+
+
+    {{-- Form Card --}}
+
+    <div class="dashboard-card p-8">
+
+
+        <form action="{{ route('projects.store') }}"
+              method="POST">
 
             @csrf
 
-            <div class="mb-4">
-                <label class="block font-semibold">Project Title</label>
 
-                <input
-                    type="text"
-                    name="title"
-                    class="w-full border rounded p-2"
-                    required>
+
+
+
+            <div class="grid md:grid-cols-2 gap-6">
+
+
+
+                {{-- Title --}}
+
+                <div class="md:col-span-2">
+
+                    <label class="block font-semibold mb-2">
+
+                        Project Title
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="title"
+                        value="{{ old('title') }}"
+                        placeholder="Enter research project title"
+                        class="w-full rounded-xl"
+                        required>
+
+                </div>
+
+
+
+
+
+
+                {{-- Department --}}
+
+                <div>
+
+
+                    <label class="block font-semibold mb-2">
+
+                        Department
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="department"
+                        value="{{ old('department') }}"
+                        placeholder="Computer Science"
+                        class="w-full rounded-xl"
+                        required>
+
+
+                </div>
+
+
+
+
+
+
+                {{-- Research Area --}}
+
+                <div>
+
+
+                    <label class="block font-semibold mb-2">
+
+                        Research Area
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="research_area"
+                        value="{{ old('research_area') }}"
+                        placeholder="Artificial Intelligence"
+                        class="w-full rounded-xl"
+                        required>
+
+
+                </div>
+
+
+
+
+
+
+
+                {{-- Deadline --}}
+
+                <div>
+
+
+                    <label class="block font-semibold mb-2">
+
+                        Research Deadline
+
+                    </label>
+
+
+                    <input
+                        type="date"
+                        name="deadline"
+                        value="{{ old('deadline') }}"
+                        class="w-full rounded-xl"
+                        required>
+
+
+                </div>
+
+
+
+
             </div>
 
 
-            <div class="mb-4">
-                <label class="block font-semibold">Description</label>
+
+
+
+
+
+            {{-- Description --}}
+
+
+            <div class="mt-6">
+
+
+                <label class="block font-semibold mb-2">
+
+                    Project Description
+
+                </label>
+
+
 
                 <textarea
                     name="description"
-                    rows="5"
-                    class="w-full border rounded p-2"
-                    required></textarea>
+                    rows="6"
+                    placeholder="Describe your research objectives, methodology and expected outcomes..."
+                    class="w-full rounded-xl"
+                    required>{{ old('description') }}</textarea>
+
+
+
             </div>
 
 
-            <div class="mb-4">
-                <label class="block font-semibold">Department</label>
 
-                <input
-                    type="text"
-                    name="department"
-                    class="w-full border rounded p-2"
-                    required>
+
+
+
+
+
+
+            {{-- Action Buttons --}}
+
+
+            <div class="mt-8 flex gap-4">
+
+
+                <button
+                    type="submit"
+                    class="px-8 py-3 rounded-xl
+                    bg-teal-600 text-white
+                    font-semibold hover:bg-teal-700">
+
+
+                    Create Project
+
+
+                </button>
+
+
+
+
+
+                <a href="{{ route('projects.index') }}"
+                   class="px-8 py-3 rounded-xl
+                   bg-slate-700 text-white">
+
+
+                    Cancel
+
+
+                </a>
+
+
             </div>
 
 
-            <div class="mb-4">
-                <label class="block font-semibold">Research Area</label>
-
-                <input
-                    type="text"
-                    name="research_area"
-                    class="w-full border rounded p-2"
-                    required>
-            </div>
 
 
-            <div class="mb-4">
-                <label class="block font-semibold">Deadline</label>
-
-                <input
-                    type="date"
-                    name="deadline"
-                    class="w-full border rounded p-2"
-                    required>
-            </div>
-
-
-            <button
-                type="submit"
-                class="bg-blue-600 text-white px-6 py-2 rounded">
-
-                Create Project
-
-            </button>
 
         </form>
 
+
     </div>
+
+
+
+
+
+</div>
+
 
 </x-app-layout>

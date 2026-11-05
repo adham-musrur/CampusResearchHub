@@ -1,167 +1,342 @@
 <x-app-layout>
 
-    <div class="max-w-4xl mx-auto py-10 px-4">
+<div class="max-w-5xl mx-auto space-y-8">
 
-        <div class="bg-white dark:bg-gray-800 shadow rounded-xl p-6">
 
-            <h1 class="text-3xl font-bold mb-6">
-                Upload Research Paper
-            </h1>
+    {{-- Header --}}
 
-            <form
-                method="POST"
-                action="{{ route('papers.store') }}"
-                enctype="multipart/form-data"
-            >
+    <div class="bg-gradient-to-r from-indigo-700 to-teal-600
+    rounded-3xl p-8 text-white shadow-xl">
 
-                @csrf
+
+        <h1 class="text-3xl font-bold">
+
+            Upload Research Paper
+
+        </h1>
+
+
+        <p class="mt-2 text-indigo-100">
+
+            Share academic publications with the research community.
+
+        </p>
+
+
+    </div>
+
+
+
+
+
+
+
+    {{-- Upload Form --}}
+
+    <div class="dashboard-card p-8">
+
+
+        <form
+            method="POST"
+            action="{{ route('papers.store') }}"
+            enctype="multipart/form-data">
+
+
+            @csrf
+
+
+
+
+
+            <div class="grid md:grid-cols-2 gap-6">
+
+
+
+
 
                 {{-- Title --}}
-                <div class="mb-5">
 
-                    <label class="block font-medium mb-2">
+                <div class="md:col-span-2">
+
+
+                    <label class="block font-semibold mb-2">
+
                         Paper Title
+
                     </label>
+
 
                     <input
                         type="text"
                         name="title"
                         value="{{ old('title') }}"
-                        class="w-full border-gray-300 rounded-lg"
-                        required
-                    >
+                        placeholder="Enter research paper title"
+                        class="w-full rounded-xl"
+                        required>
+
+
 
                     @error('title')
-                        <p class="text-red-600 text-sm mt-1">
-                            {{ $message }}
-                        </p>
+
+                    <p class="text-red-600 text-sm mt-2">
+
+                        {{ $message }}
+
+                    </p>
+
                     @enderror
+
 
                 </div>
 
 
-                {{-- Abstract --}}
-                <div class="mb-5">
 
-                    <label class="block font-medium mb-2">
-                        Abstract
-                    </label>
 
-                    <textarea
-                        name="abstract"
-                        rows="6"
-                        class="w-full border-gray-300 rounded-lg"
-                        required
-                    >{{ old('abstract') }}</textarea>
 
-                    @error('abstract')
-                        <p class="text-red-600 text-sm mt-1">
-                            {{ $message }}
-                        </p>
-                    @enderror
 
-                </div>
 
 
                 {{-- Category --}}
-                <div class="mb-5">
 
-                    <label class="block font-medium mb-2">
-                        Category
+                <div>
+
+
+                    <label class="block font-semibold mb-2">
+
+                        Research Category
+
                     </label>
+
 
                     <input
                         type="text"
                         name="category"
                         value="{{ old('category') }}"
-                        placeholder="Machine Learning"
-                        class="w-full border-gray-300 rounded-lg"
-                        required
-                    >
+                        placeholder="Artificial Intelligence"
+                        class="w-full rounded-xl"
+                        required>
+
+
 
                     @error('category')
-                        <p class="text-red-600 text-sm mt-1">
-                            {{ $message }}
-                        </p>
+
+                    <p class="text-red-600 text-sm mt-2">
+
+                        {{ $message }}
+
+                    </p>
+
                     @enderror
+
 
                 </div>
 
 
-                {{-- Publication Date --}}
-                <div class="mb-5">
 
-                    <label class="block font-medium mb-2">
+
+
+
+
+                {{-- Date --}}
+
+                <div>
+
+
+                    <label class="block font-semibold mb-2">
+
                         Publication Date
+
                     </label>
+
 
                     <input
                         type="date"
                         name="publication_date"
                         value="{{ old('publication_date') }}"
-                        class="w-full border-gray-300 rounded-lg"
-                    >
+                        class="w-full rounded-xl">
+
+
 
                     @error('publication_date')
-                        <p class="text-red-600 text-sm mt-1">
-                            {{ $message }}
-                        </p>
+
+                    <p class="text-red-600 text-sm mt-2">
+
+                        {{ $message }}
+
+                    </p>
+
                     @enderror
+
 
                 </div>
 
 
-                {{-- PDF --}}
-                <div class="mb-6">
 
-                    <label class="block font-medium mb-2">
-                        Research Paper PDF
-                    </label>
+            </div>
+
+
+
+
+
+
+
+
+            {{-- Abstract --}}
+
+            <div class="mt-6">
+
+
+                <label class="block font-semibold mb-2">
+
+                    Research Abstract
+
+                </label>
+
+
+
+                <textarea
+                    name="abstract"
+                    rows="7"
+                    placeholder="Write a summary of your research..."
+                    class="w-full rounded-xl"
+                    required>{{ old('abstract') }}</textarea>
+
+
+
+                @error('abstract')
+
+                <p class="text-red-600 text-sm mt-2">
+
+                    {{ $message }}
+
+                </p>
+
+                @enderror
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+            {{-- File Upload --}}
+
+            <div class="mt-6">
+
+
+                <label class="block font-semibold mb-2">
+
+                    Upload PDF File
+
+                </label>
+
+
+
+
+                <div class="border-2 border-dashed
+                rounded-2xl p-8 text-center">
+
+
+                    <div class="text-5xl mb-4">
+
+                        📄
+
+                    </div>
+
 
                     <input
                         type="file"
                         name="paper_file"
                         accept=".pdf"
-                        class="w-full border border-gray-300 rounded-lg p-2"
-                        required
-                    >
+                        class="w-full"
+                        required>
 
-                    <p class="text-sm text-gray-500 mt-1">
-                        PDF only. Maximum size: 10 MB.
+
+
+                    <p class="text-sm text-slate-500 mt-3">
+
+                        PDF format only. Maximum size: 10 MB.
+
                     </p>
 
-                    @error('paper_file')
-                        <p class="text-red-600 text-sm mt-1">
-                            {{ $message }}
-                        </p>
-                    @enderror
+
 
                 </div>
 
 
-                {{-- Buttons --}}
-                <div class="flex gap-3">
 
-                    <button
-                        type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg"
-                    >
-                        Upload Paper
-                    </button>
 
-                    <a
-                        href="{{ route('papers.index') }}"
-                        class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2.5 rounded-lg"
-                    >
-                        Cancel
-                    </a>
+                @error('paper_file')
 
-                </div>
+                <p class="text-red-600 text-sm mt-2">
 
-            </form>
+                    {{ $message }}
 
-        </div>
+                </p>
+
+                @enderror
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+            {{-- Buttons --}}
+
+            <div class="mt-8 flex gap-4">
+
+
+                <button
+                    type="submit"
+                    class="px-8 py-3 rounded-xl
+                    bg-teal-600 text-white font-semibold">
+
+
+                    Upload Paper
+
+
+                </button>
+
+
+
+
+
+                <a href="{{ route('papers.index') }}"
+                   class="px-8 py-3 rounded-xl
+                   bg-slate-700 text-white">
+
+
+                    Cancel
+
+
+                </a>
+
+
+            </div>
+
+
+
+
+
+        </form>
+
 
     </div>
+
+
+
+</div>
+
 
 </x-app-layout>

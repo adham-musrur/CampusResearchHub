@@ -1,547 +1,275 @@
-<nav x-data="{ open: false }"
-class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-
-
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-
-<div class="flex justify-between h-16">
-
-
-{{-- LEFT SIDE --}}
-
-<div class="flex items-center">
-
-
-{{-- Logo --}}
-
-<div class="shrink-0 flex items-center">
-
-<a href="{{ url('/') }}">
-
-<x-application-logo
-class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"
-/>
-
-</a>
-
-</div>
-
-
-
-
-{{-- DESKTOP NAVIGATION --}}
-
-<div class="hidden sm:flex sm:items-center sm:ms-8 space-x-6">
-
-
 @auth
 
+<div class="sidebar-wrapper">
 
-<x-nav-link
-:href="route('dashboard')"
-:active="request()->routeIs('dashboard')">
 
-Dashboard
+    {{-- LOGO --}}
 
-</x-nav-link>
+    <div class="sidebar-logo">
 
+        <a href="{{ route('dashboard') }}">
 
+            <img
+                src="{{ asset('images/logo.png') }}"
+                alt="CampusResearchHub Logo">
 
-<x-nav-link
-:href="route('projects.index')"
-:active="request()->routeIs('projects.*')">
 
-Projects
+            <div>
 
-</x-nav-link>
+                <h2>
+                    CampusResearchHub
+                </h2>
 
+                <p>
+                    Research Platform
+                </p>
 
+            </div>
 
-<x-nav-link
-:href="route('papers.index')"
-:active="request()->routeIs('papers.*')">
 
-Papers
+        </a>
 
-</x-nav-link>
+    </div>
 
 
 
-<x-nav-link
-:href="route('datasets.index')"
-:active="request()->routeIs('datasets.*')">
 
-Datasets
 
-</x-nav-link>
+    {{-- USER PROFILE --}}
 
+    <div class="sidebar-user">
 
 
-<x-nav-link
-:href="route('updates.index')"
-:active="request()->routeIs('updates.*')">
+        <div class="avatar">
 
-Updates
+            {{ strtoupper(substr(auth()->user()->name,0,1)) }}
 
-</x-nav-link>
+        </div>
 
 
-@endauth
 
+        <div>
 
+            <h4>
 
+                {{ auth()->user()->name }}
 
+            </h4>
 
-<x-nav-link
-:href="route('research.public')"
-:active="request()->routeIs('research.public')">
 
-Research
+            <span>
 
-</x-nav-link>
+                {{ ucfirst(auth()->user()->role) }}
 
+            </span>
 
 
-<x-nav-link
-:href="route('research.search')">
+        </div>
 
-Search
 
-</x-nav-link>
+    </div>
 
 
-</div>
 
 
-</div>
 
 
 
 
+    {{-- MENU --}}
 
+    <div class="sidebar-menu">
 
 
-{{-- RIGHT SIDE --}}
+        <a href="{{ route('dashboard') }}"
+           class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
 
-<div class="hidden sm:flex sm:items-center sm:ms-6">
+            <span>▣</span>
 
+            Dashboard
 
-@auth
+        </a>
 
 
 
-{{-- Notification Bell --}}
 
-<x-dropdown align="right" width="80">
 
+        <a href="{{ route('projects.index') }}"
+           class="{{ request()->routeIs('projects.*') ? 'active' : '' }}">
 
-<x-slot name="trigger">
+            <span>◉</span>
 
+            Projects
 
-<button
-class="relative mr-5 text-gray-600 dark:text-gray-300">
+        </a>
 
-🔔
 
 
-@if($notifications->count())
 
 
-<span class="absolute -top-2 -right-2
-bg-red-600 text-white text-xs
-rounded-full px-2">
 
+        <a href="{{ route('papers.index') }}"
+           class="{{ request()->routeIs('papers.*') ? 'active' : '' }}">
 
-{{ $notifications->count() }}
+            <span>📄</span>
 
+            Research Papers
 
-</span>
+        </a>
 
 
-@endif
 
 
-</button>
 
 
-</x-slot>
+        <a href="{{ route('datasets.index') }}"
+           class="{{ request()->routeIs('datasets.*') ? 'active' : '' }}">
 
+            <span>📊</span>
 
+            Datasets
 
+        </a>
 
-<x-slot name="content">
 
 
 
-@if($notifications->count())
 
 
+        <a href="{{ route('updates.index') }}"
+           class="{{ request()->routeIs('updates.*') ? 'active' : '' }}">
 
-@foreach($notifications as $notification)
+            <span>📝</span>
 
+            Updates
 
+        </a>
 
-<div class="px-4 py-3 border-b">
 
 
-<p class="text-sm text-gray-800">
 
-{{ $notification->data['message'] }}
 
-</p>
 
+        <a href="#">
 
-<p class="text-xs text-gray-500 mt-1">
+            <span>💬</span>
 
-{{ $notification->created_at->diffForHumans() }}
+            Discussions
 
-</p>
+        </a>
 
 
-</div>
 
 
 
-@endforeach
 
 
+        @if(auth()->user()->role === 'admin')
 
-@else
 
+            <div class="sidebar-divider"></div>
 
-<div class="px-4 py-3 text-gray-500">
 
-No notifications
+            <div class="sidebar-title">
 
-</div>
+                Administration
 
+            </div>
 
-@endif
 
 
 
-</x-slot>
 
+            <a href="{{ route('admin.users.index') }}"
+               class="{{ request()->routeIs('admin.*') ? 'active' : '' }}">
 
+                <span>👥</span>
 
-</x-dropdown>
+                User Management
 
+            </a>
 
 
 
+        @endif
 
 
 
-{{-- USER DROPDOWN --}}
 
 
-<x-dropdown align="right" width="48">
 
 
-<x-slot name="trigger">
+        <div class="sidebar-divider"></div>
 
 
-<button
-class="inline-flex items-center px-3 py-2
-border border-transparent text-sm
-font-medium rounded-md text-gray-500
-dark:text-gray-400">
 
 
-<div>
 
-{{ Auth::user()->name }}
+        <a href="{{ route('research.public') }}">
 
-</div>
+            <span>🌐</span>
 
+            Public Research
 
+        </a>
 
-<div class="ms-1">
 
-<svg class="fill-current h-4 w-4"
-xmlns="http://www.w3.org/2000/svg"
-viewBox="0 0 20 20">
 
 
-<path
-fill-rule="evenodd"
-d="M5.293 7.293a1 1 0 011.414 0
-L10 10.586l3.293-3.293
-a1 1 0 111.414 1.414l-4 4
-a1 1 0 01-1.414 0l-4-4
-a1 1 0 010-1.414z"
-clip-rule="evenodd"/>
 
+        <a href="{{ route('research.search') }}">
 
-</svg>
+            <span>🔍</span>
 
-</div>
+            Search
 
+        </a>
 
-</button>
 
 
-</x-slot>
 
+    </div>
 
 
 
 
-<x-slot name="content">
 
 
-<x-dropdown-link :href="route('profile.edit')">
 
-Profile
 
-</x-dropdown-link>
 
+    {{-- LOGOUT --}}
 
 
+    <div class="sidebar-footer">
 
-<form method="POST"
-action="{{ route('logout') }}">
 
+        <form method="POST"
+              action="{{ route('logout') }}">
 
-@csrf
 
+            @csrf
 
 
-<x-dropdown-link
-:href="route('logout')"
-onclick="event.preventDefault();
-this.closest('form').submit();">
 
+            <button type="submit">
 
-Log Out
+                🚪 Logout
 
+            </button>
 
-</x-dropdown-link>
 
 
-</form>
+        </form>
 
 
+    </div>
 
-</x-slot>
 
 
-
-</x-dropdown>
-
-
-
-@endauth
-
-
-
-
-
-@guest
-
-
-<a href="{{ route('login') }}"
-class="text-gray-700 dark:text-gray-300">
-
-Login
-
-</a>
-
-
-
-<a href="{{ route('register') }}"
-class="ms-5 text-gray-700 dark:text-gray-300">
-
-Register
-
-</a>
-
-
-@endguest
-
-
-
-</div>
-
-
-
-
-
-
-{{-- MOBILE BUTTON --}}
-
-
-<div class="-me-2 flex items-center sm:hidden">
-
-
-<button
-@click="open=!open"
-class="p-2 rounded-md text-gray-400">
-
-
-<svg class="h-6 w-6"
-stroke="currentColor"
-fill="none"
-viewBox="0 0 24 24">
-
-
-<path
-:class="{'hidden':open,'inline-flex':!open}"
-stroke-linecap="round"
-stroke-linejoin="round"
-stroke-width="2"
-d="M4 6h16M4 12h16M4 18h16"/>
-
-
-<path
-:class="{'hidden':!open,'inline-flex':open}"
-stroke-linecap="round"
-stroke-linejoin="round"
-stroke-width="2"
-d="M6 18L18 6M6 6l12 12"/>
-
-
-</svg>
-
-
-</button>
-
-
-</div>
-
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-{{-- MOBILE MENU --}}
-
-
-<div
-:class="{'block':open,'hidden':!open}"
-class="hidden sm:hidden">
-
-
-<div class="pt-2 pb-3 space-y-1">
-
-
-<x-responsive-nav-link
-:href="route('research.public')">
-
-Research
-
-</x-responsive-nav-link>
-
-
-
-<x-responsive-nav-link
-:href="route('research.search')">
-
-Search
-
-</x-responsive-nav-link>
-
-
-
-@auth
-
-
-<x-responsive-nav-link
-:href="route('dashboard')">
-
-Dashboard
-
-</x-responsive-nav-link>
-
-
-
-<x-responsive-nav-link
-:href="route('projects.index')">
-
-Projects
-
-</x-responsive-nav-link>
-
-
-
-<x-responsive-nav-link
-:href="route('papers.index')">
-
-Papers
-
-</x-responsive-nav-link>
-
-
-
-<x-responsive-nav-link
-:href="route('datasets.index')">
-
-Datasets
-
-</x-responsive-nav-link>
-
-
-
-<x-responsive-nav-link
-:href="route('updates.index')">
-
-Updates
-
-</x-responsive-nav-link>
-
-
-@endauth
-
-
-</div>
-
-
-
-
-
-@auth
-
-
-<div class="border-t pt-4 pb-1">
-
-
-<div class="px-4">
-
-
-<div class="font-medium">
-
-{{ Auth::user()->name }}
-
-</div>
-
-
-<div class="text-sm text-gray-500">
-
-{{ Auth::user()->email }}
-
-</div>
-
-
-</div>
 
 
 </div>
 
 
 @endauth
-
-
-
-</div>
-
-
-
-</nav>

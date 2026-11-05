@@ -1,82 +1,283 @@
 <x-app-layout>
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-            Dataset Details
-        </h2>
-    </x-slot>
-
-    <div class="py-8">
-
-        <div class="max-w-4xl mx-auto px-4">
-
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
-
-                <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">
-                    {{ $dataset->dataset_name }}
-                </h1>
+<div class="max-w-6xl mx-auto space-y-8">
 
 
-                <div class="space-y-4">
 
-                    <div>
-                        <strong>Project:</strong>
+{{-- Header --}}
 
-                        {{ $dataset->project->title ?? 'Unknown' }}
-                    </div>
+<div class="bg-gradient-to-r from-teal-700 to-cyan-600
+rounded-3xl p-8 text-white shadow-xl">
 
 
-                    <div>
-                        <strong>Description:</strong>
-
-                        <p class="text-gray-600 mt-1">
-                            {{ $dataset->description }}
-                        </p>
-                    </div>
+<div class="flex flex-col md:flex-row
+justify-between gap-5">
 
 
-                    <div>
-                        <strong>File Type:</strong>
-
-                        {{ strtoupper($dataset->file_type) }}
-                    </div>
+<div>
 
 
-                    <div>
-                        <strong>Uploaded By:</strong>
+<div class="text-5xl mb-4">
 
-                        {{ $dataset->uploader->name ?? 'Unknown' }}
-                    </div>
+📊
 
-
-                    <div>
-                        <strong>Uploaded:</strong>
-
-                        {{ $dataset->created_at->format('d M Y') }}
-                    </div>
-
-                </div>
+</div>
 
 
-                <div class="flex gap-3 mt-8">
+<h1 class="text-3xl md:text-4xl font-bold">
 
-                    <a href="{{ route('datasets.download', $dataset) }}"
-                       class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg">
-                        Download Dataset
-                    </a>
+{{ $dataset->dataset_name }}
+
+</h1>
 
 
-                    <a href="{{ route('datasets.index') }}"
-                       class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2.5 rounded-lg">
-                        Back to Datasets
-                    </a>
+<p class="mt-3 text-teal-100">
 
-                </div>
+Research Dataset Details
 
-            </div>
+</p>
 
-        </div>
 
-    </div>
+</div>
+
+
+
+
+
+<span class="self-start px-5 py-2 rounded-full
+bg-white text-teal-700 font-semibold">
+
+
+{{ strtoupper($dataset->file_type) }}
+
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- Information Cards --}}
+
+<div class="grid md:grid-cols-3 gap-6">
+
+
+
+<div class="dashboard-card p-6">
+
+
+<p class="text-sm text-slate-500">
+
+Research Project
+
+</p>
+
+
+<h3 class="font-bold text-lg mt-2">
+
+{{ $dataset->project->title ?? 'Unknown' }}
+
+</h3>
+
+
+</div>
+
+
+
+
+
+
+<div class="dashboard-card p-6">
+
+
+<p class="text-sm text-slate-500">
+
+Uploaded By
+
+</p>
+
+
+<h3 class="font-bold text-lg mt-2">
+
+{{ $dataset->uploader->name ?? 'Unknown' }}
+
+</h3>
+
+
+</div>
+
+
+
+
+
+
+<div class="dashboard-card p-6">
+
+
+<p class="text-sm text-slate-500">
+
+Uploaded Date
+
+</p>
+
+
+<h3 class="font-bold text-lg mt-2">
+
+{{ $dataset->created_at->format('d M Y') }}
+
+</h3>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+{{-- Description --}}
+
+<div class="dashboard-card p-8">
+
+
+<h2 class="text-2xl font-bold mb-4">
+
+Dataset Description
+
+</h2>
+
+
+<p class="text-slate-600 leading-relaxed">
+
+{{ $dataset->description }}
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- File Section --}}
+
+<div class="dashboard-card p-8">
+
+
+<h2 class="text-2xl font-bold mb-5">
+
+Dataset File
+
+</h2>
+
+
+
+<div class="border-2 border-dashed rounded-2xl
+p-10 text-center">
+
+
+<div class="text-6xl mb-4">
+
+📁
+
+</div>
+
+
+<p class="text-slate-500 mb-6">
+
+Download the complete research dataset.
+
+</p>
+
+
+
+<a href="{{ route('datasets.download',$dataset) }}"
+class="inline-flex px-8 py-3 rounded-xl
+bg-teal-600 text-white font-semibold">
+
+
+Download Dataset
+
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+{{-- Actions --}}
+
+<div class="dashboard-card p-6 flex flex-wrap gap-4">
+
+
+
+<a href="{{ route('datasets.download',$dataset) }}"
+class="px-6 py-3 rounded-xl
+bg-teal-600 text-white">
+
+
+Download Dataset
+
+
+</a>
+
+
+
+
+
+<a href="{{ route('datasets.index') }}"
+class="px-6 py-3 rounded-xl
+bg-slate-700 text-white">
+
+
+Back to Datasets
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
 
 </x-app-layout>

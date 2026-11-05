@@ -1,23 +1,51 @@
 <x-app-layout>
 
-<div class="max-w-6xl mx-auto mt-8 px-4">
+<div class="space-y-8">
 
 
     {{-- Header --}}
 
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col md:flex-row
+    justify-between md:items-center gap-4">
 
-        <h2 class="text-2xl font-bold">
-            Research Projects
-        </h2>
+
+        <div>
+
+            <h1 class="text-3xl font-bold text-slate-800">
+
+                Research Projects
+
+            </h1>
+
+
+            <p class="text-slate-500 mt-2">
+
+                Explore and manage academic research projects.
+
+            </p>
+
+
+        </div>
+
+
+
+        @if(in_array(auth()->user()->role,
+            ['faculty','supervisor','admin']))
 
 
         <a href="{{ route('projects.create') }}"
-           class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+           class="px-6 py-3 rounded-xl
+           bg-teal-600 text-white
+           hover:bg-teal-700 transition">
+
 
             + Create Project
 
+
         </a>
+
+
+        @endif
 
 
     </div>
@@ -25,50 +53,29 @@
 
 
 
-    {{-- Success Message --}}
-
-    @if(session('success'))
-
-        <div class="bg-green-200 text-green-800 p-3 rounded mb-4">
-
-            {{ session('success') }}
-
-        </div>
-
-    @endif
 
 
 
+    {{-- Search and Filters --}}
+
+    <div class="dashboard-card p-6">
 
 
-    {{-- Search and Filter --}}
+        <form method="GET"
+              action="{{ route('projects.index') }}"
+              class="grid md:grid-cols-4 gap-4">
 
-    <form method="GET"
-          action="{{ route('projects.index') }}"
-          class="bg-white shadow rounded p-5 mb-6">
-
-
-        <div class="flex flex-col md:flex-row gap-4 items-center">
-
-
-            {{-- Search --}}
 
             <input
                 type="text"
                 name="search"
-                value="{{ $search ?? '' }}"
+                value="{{ $search }}"
                 placeholder="Search projects..."
-                class="border rounded px-3 py-2 w-full md:flex-1">
+                class="rounded-xl">
 
 
-
-
-
-            {{-- Department --}}
-
-            <select
-                name="department"
-                class="border rounded px-3 py-2 w-full md:w-1/4">
+            <select name="department"
+                    class="rounded-xl">
 
 
                 <option value="">
@@ -76,18 +83,14 @@
                 </option>
 
 
-                @foreach($departments as $dept)
+                @foreach($departments as $item)
 
-                    <option value="{{ $dept }}"
-                        @if(($department ?? '') == $dept)
-                            selected
-                        @endif
-                    >
+                    <option value="{{ $item }}"
+                    @selected($department == $item)>
 
-                        {{ $dept }}
+                        {{ $item }}
 
                     </option>
-
 
                 @endforeach
 
@@ -97,12 +100,8 @@
 
 
 
-
-            {{-- Status --}}
-
-            <select
-                name="status"
-                class="border rounded px-3 py-2 w-full md:w-1/4">
+            <select name="status"
+                    class="rounded-xl">
 
 
                 <option value="">
@@ -111,35 +110,20 @@
 
 
                 <option value="pending"
-                    @if(($status ?? '') == 'pending')
-                        selected
-                    @endif
-                >
-
+                @selected($status=='pending')>
                     Pending
-
                 </option>
 
 
                 <option value="approved"
-                    @if(($status ?? '') == 'approved')
-                        selected
-                    @endif
-                >
-
+                @selected($status=='approved')>
                     Approved
-
                 </option>
 
 
                 <option value="completed"
-                    @if(($status ?? '') == 'completed')
-                        selected
-                    @endif
-                >
-
+                @selected($status=='completed')>
                     Completed
-
                 </option>
 
 
@@ -148,98 +132,143 @@
 
 
 
-
-            {{-- Search Button --}}
-
             <button
-                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded w-full md:w-auto">
+                class="rounded-xl bg-teal-600
+                text-white font-semibold">
+
 
                 Search
+
 
             </button>
 
 
-        </div>
+        </form>
 
 
-    </form>
-
-
-
+    </div>
 
 
 
 
-    {{-- Projects List --}}
 
 
-    @forelse($projects as $project)
+
+    {{-- Project Cards --}}
 
 
-        <div class="bg-white shadow rounded p-5 mb-4">
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
 
 
-            <h3 class="text-xl font-bold">
+        @forelse($projects as $project)
 
-                <a href="{{ route('projects.show', $project) }}"
-                   class="text-blue-600 hover:underline">
 
-                    {{ $project->title }}
+
+        <div class="dashboard-card p-6
+        hover:shadow-xl transition">
+
+
+
+            <div class="flex justify-between">
+
+
+                <span
+                class="px-3 py-1 rounded-full
+                text-sm bg-teal-100 text-teal-700">
+
+                    {{ $project->status }}
+
+                </span>
+
+
+            </div>
+
+
+
+
+
+            <h2 class="text-xl font-bold mt-5">
+
+
+                {{ $project->title }}
+
+
+            </h2>
+
+
+
+
+            <p class="text-slate-500 mt-3 text-sm">
+
+
+                {{ Str::limit(
+                    $project->description,
+                    130
+                ) }}
+
+
+            </p>
+
+
+
+
+
+
+            <div class="mt-5 space-y-2 text-sm">
+
+
+                <p>
+
+                    🏛
+                    {{ $project->department }}
+
+                </p>
+
+
+
+                <p>
+
+                    🔬
+                    {{ $project->research_area }}
+
+                </p>
+
+
+
+                <p>
+
+                    👤
+                    {{ $project->user->name }}
+
+                </p>
+
+
+            </div>
+
+
+
+
+
+
+            <div class="mt-6">
+
+
+                <a href="{{ route(
+                    'projects.show',
+                    $project
+                ) }}"
+                class="block text-center
+                rounded-xl bg-slate-900
+                text-white py-3">
+
+
+                    View Project
+
 
                 </a>
 
 
-            </h3>
-
-
-
-
-            <p class="mt-2">
-
-                {{ $project->description }}
-
-            </p>
-
-
-
-
-            <p class="mt-3">
-
-                <strong>Department:</strong>
-
-                {{ $project->department }}
-
-            </p>
-
-
-
-            <p>
-
-                <strong>Research Area:</strong>
-
-                {{ $project->research_area }}
-
-            </p>
-
-
-
-            <p>
-
-                <strong>Status:</strong>
-
-                {{ ucfirst($project->status) }}
-
-            </p>
-
-
-
-            <p>
-
-                <strong>Deadline:</strong>
-
-                {{ $project->deadline }}
-
-            </p>
+            </div>
 
 
 
@@ -247,18 +276,27 @@
 
 
 
-    @empty
+        @empty
 
 
-        <div class="bg-yellow-100 p-4 rounded">
+        <div class="col-span-full
+        dashboard-card p-10 text-center">
 
-            No research projects found.
+
+            <p class="text-slate-500">
+
+                No research projects found.
+
+            </p>
+
 
         </div>
 
 
-    @endforelse
+        @endforelse
 
+
+    </div>
 
 
 
@@ -267,7 +305,7 @@
 
     {{-- Pagination --}}
 
-    <div class="mt-6">
+    <div>
 
         {{ $projects->links() }}
 

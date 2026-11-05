@@ -10,14 +10,28 @@ use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\PublicResearchController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ResearchSearchController;
+use App\Http\Controllers\NotificationController;
 
+use Illuminate\Support\Facades\Route;
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Public Search
+|--------------------------------------------------------------------------
+*/
 
 Route::get(
     '/research/search',
     [ResearchSearchController::class,'index']
 )->name('research.search');
+
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -25,8 +39,13 @@ Route::get(
 */
 
 Route::get('/', function () {
+
     return view('welcome');
+
 });
+
+
+
 
 
 /*
@@ -35,30 +54,43 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get(
+    '/dashboard',
+    [DashboardController::class,'index']
+)
+->middleware(['auth','verified'])
+->name('dashboard');
+
+
+
+
 
 
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
-|
-| IMPORTANT:
-| Only authenticated administrators can access these routes.
-|
 */
 
-Route::middleware(['auth', 'admin'])
+Route::middleware(['auth','admin'])
     ->prefix('admin')
     ->name('admin.')
-    ->group(function () {
+    ->group(function(){
 
-        Route::resource('users', UserController::class)
-            ->except(['show']);
+
+        Route::resource(
+            'users',
+            UserController::class
+        )->except(['show']);
+
 
     });
+
+
+
+
+
+
 
 
 /*
@@ -67,14 +99,19 @@ Route::middleware(['auth', 'admin'])
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth')->group(function () {
+
+Route::middleware('auth')->group(function(){
 
 
-   /*
+
+
+
+/*
 |--------------------------------------------------------------------------
 | Research Projects
 |--------------------------------------------------------------------------
 */
+
 
 Route::resource(
     'projects',
@@ -82,138 +119,258 @@ Route::resource(
 );
 
 
+
 Route::post(
     '/projects/{project}/members',
-    [ProjectMemberController::class, 'store']
-)->name('projects.members.store');
+    [ProjectMemberController::class,'store']
+)
+->name('projects.members.store');
+
 
 
 Route::delete(
     '/projects/{project}/members/{member}',
-    [ProjectMemberController::class, 'destroy']
-)->name('projects.members.destroy');
-    /*
-    |--------------------------------------------------------------------------
-    | Research Papers
-    |--------------------------------------------------------------------------
-    */
-
-    Route::resource(
-        'papers',
-        ResearchPaperController::class
-    )->only([
-        'index',
-        'create',
-        'store',
-        'show',
-        'destroy'
-    ]);
+    [ProjectMemberController::class,'destroy']
+)
+->name('projects.members.destroy');
 
 
-    Route::get(
-        '/papers/{paper}/download',
-        [ResearchPaperController::class, 'download']
-    )->name('papers.download');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Datasets
-    |--------------------------------------------------------------------------
-    */
-
-    Route::resource(
-        'datasets',
-        DatasetController::class
-    )->only([
-        'index',
-        'create',
-        'store',
-        'show',
-        'destroy'
-    ]);
 
 
-    Route::get(
-        '/datasets/{dataset}/download',
-        [DatasetController::class, 'download']
-    )->name('datasets.download');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Profile
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get(
-        '/profile',
-        [ProfileController::class, 'edit']
-    )->name('profile.edit');
+/*
+|--------------------------------------------------------------------------
+| Research Papers
+|--------------------------------------------------------------------------
+*/
 
 
-    Route::patch(
-        '/profile',
-        [ProfileController::class, 'update']
-    )->name('profile.update');
+Route::resource(
+    'papers',
+    ResearchPaperController::class
+)->only([
+    'index',
+    'create',
+    'store',
+    'show',
+    'destroy'
+]);
 
 
-    Route::delete(
-        '/profile',
-        [ProfileController::class, 'destroy']
-    )->name('profile.destroy');
+
+Route::get(
+    '/papers/{paper}/download',
+    [ResearchPaperController::class,'download']
+)
+->name('papers.download');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Research Updates
-    |--------------------------------------------------------------------------
-    */
-
-    Route::resource(
-        'updates',
-        ResearchUpdateController::class
-    )->only([
-        'index',
-        'create',
-        'store',
-        'show',
-        'destroy'
-    ]);
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | Project Discussions
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get(
-        '/projects/{project}/discussions',
-        [DiscussionController::class, 'index']
-    )->name('projects.discussions');
 
 
-    Route::post(
-        '/projects/{project}/discussions',
-        [DiscussionController::class, 'store']
-    )->name('projects.discussions.store');
 
 
-    Route::delete(
-        '/discussions/{discussion}',
-        [DiscussionController::class, 'destroy']
-    )->name('discussions.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Datasets
+|--------------------------------------------------------------------------
+*/
+
+
+Route::resource(
+    'datasets',
+    DatasetController::class
+)->only([
+    'index',
+    'create',
+    'store',
+    'show',
+    'destroy'
+]);
+
+
+
+Route::get(
+    '/datasets/{dataset}/download',
+    [DatasetController::class,'download']
+)
+->name('datasets.download');
+
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Profile
+|--------------------------------------------------------------------------
+*/
+
+
+Route::get(
+    '/profile',
+    [ProfileController::class,'edit']
+)
+->name('profile.edit');
+
+
+
+Route::patch(
+    '/profile',
+    [ProfileController::class,'update']
+)
+->name('profile.update');
+
+
+
+Route::delete(
+    '/profile',
+    [ProfileController::class,'destroy']
+)
+->name('profile.destroy');
+
+
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Notifications
+|--------------------------------------------------------------------------
+*/
+
+
+Route::get(
+    '/notifications',
+    [NotificationController::class,'index']
+)
+->name('notifications.index');
+
+
+
+Route::post(
+    '/notifications/{id}/read',
+    [NotificationController::class,'markAsRead']
+)
+->name('notifications.read');
+
+
+
+Route::post(
+    '/notifications/read-all',
+    [NotificationController::class,'markAllRead']
+)
+->name('notifications.readAll');
+
+
+
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Research Updates
+|--------------------------------------------------------------------------
+*/
+
+
+Route::resource(
+    'updates',
+    ResearchUpdateController::class
+)->only([
+    'index',
+    'create',
+    'store',
+    'show',
+    'destroy'
+]);
+
+
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Project Discussions
+|--------------------------------------------------------------------------
+*/
+
+
+Route::get(
+    '/projects/{project}/discussions',
+    [DiscussionController::class,'index']
+)
+->name('projects.discussions');
+
+
+
+Route::post(
+    '/projects/{project}/discussions',
+    [DiscussionController::class,'store']
+)
+->name('projects.discussions.store');
+
+
+
+Route::delete(
+    '/discussions/{discussion}',
+    [DiscussionController::class,'destroy']
+)
+->name('discussions.destroy');
+
+
 
 });
 
-Route::get(
-    '/research',
-    [PublicResearchController::class, 'index']
-)->name('research.public');
+
+
+
+
+
+
+
 /*
 |--------------------------------------------------------------------------
-| Authentication Routes
+| Public Research
+|--------------------------------------------------------------------------
+*/
+
+
+Route::get(
+    '/research',
+    [PublicResearchController::class,'index']
+)
+->name('research.public');
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Authentication
 |--------------------------------------------------------------------------
 */
 

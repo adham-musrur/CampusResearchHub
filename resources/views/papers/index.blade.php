@@ -1,425 +1,376 @@
 <x-app-layout>
 
-    <x-slot name="header">
+<div class="max-w-7xl mx-auto space-y-8">
 
-        <div class="flex justify-between items-center">
 
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-                Research Papers
-            </h2>
 
+{{-- Header --}}
 
-            <a href="{{ route('papers.create') }}"
-               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+<div class="bg-gradient-to-r from-indigo-700 to-teal-600
+rounded-3xl p-8 text-white shadow-xl">
 
-                + Upload Paper
 
-            </a>
+<div class="flex flex-col md:flex-row
+justify-between gap-5">
 
 
-        </div>
+<div>
 
-    </x-slot>
+<h1 class="text-3xl font-bold">
 
+Research Papers
 
+</h1>
 
-    <div class="py-8">
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<p class="mt-2 text-indigo-100">
 
+Explore academic publications, articles and research documents.
 
+</p>
 
-            {{-- Success Message --}}
 
-            @if(session('success'))
+</div>
 
-                <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
 
-                    {{ session('success') }}
 
-                </div>
 
-            @endif
+<a href="{{ route('papers.create') }}"
+class="px-6 py-3 rounded-xl
+bg-white text-teal-700 font-semibold
+hover:bg-slate-100">
 
 
++ Upload Paper
 
 
+</a>
 
 
-            {{-- Page Header --}}
 
-            <div class="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-6 mb-6">
+</div>
 
 
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
+</div>
 
-                    Research Papers
 
-                </h1>
 
 
-                <p class="text-gray-500 mt-1">
 
-                    Browse and manage research papers.
 
-                </p>
+{{-- Success --}}
 
+@if(session('success'))
 
-            </div>
+<div class="bg-green-100 border border-green-300
+text-green-700 px-5 py-4 rounded-xl">
 
+{{ session('success') }}
 
+</div>
 
+@endif
 
 
 
 
-            {{-- Search and Filter --}}
 
-            <form method="GET"
-                  action="{{ route('papers.index') }}"
-                  class="bg-white dark:bg-gray-800 shadow rounded-xl p-5 mb-6">
 
 
-                <div class="flex flex-col md:flex-row gap-4 items-center">
+{{-- Search --}}
 
+<div class="dashboard-card p-6">
 
 
-                    <input
+<form method="GET"
+action="{{ route('papers.index') }}"
+class="grid md:grid-cols-3 gap-4">
 
-                        type="text"
 
-                        name="search"
+<input
+type="text"
+name="search"
+value="{{ $search ?? '' }}"
+placeholder="Search research papers..."
+class="rounded-xl">
 
-                        value="{{ $search ?? '' }}"
 
-                        placeholder="Search papers..."
 
-                        class="border rounded-lg px-3 py-2 w-full md:flex-1"
 
-                    >
 
+<select name="category"
+class="rounded-xl">
 
 
+<option value="">
 
+All Categories
 
-                    <select
+</option>
 
-                        name="category"
 
-                        class="border rounded-lg px-3 py-2 w-full md:w-1/3"
+@foreach($categories as $cat)
 
-                    >
 
+<option value="{{ $cat }}"
+@selected(($category ?? '')==$cat)>
 
-                        <option value="">
-                            All Categories
-                        </option>
+{{ $cat }}
 
+</option>
 
 
-                        @foreach($categories as $cat)
+@endforeach
 
 
-                            <option value="{{ $cat }}"
+</select>
 
-                            @if(($category ?? '') == $cat)
-                                selected
-                            @endif
 
-                            >
 
-                                {{ $cat }}
 
-                            </option>
+<button
+class="rounded-xl bg-teal-600 text-white font-semibold">
 
 
-                        @endforeach
+Search Papers
 
 
-                    </select>
+</button>
 
 
+</form>
 
 
+</div>
 
-                    <button
 
-                        class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-5 py-2 w-full md:w-auto"
 
-                    >
 
-                        Search
 
 
-                    </button>
 
+{{-- Papers Grid --}}
 
 
-                </div>
+@if($papers->count())
 
 
-            </form>
+<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
 
 
+@foreach($papers as $paper)
 
 
 
+<div class="dashboard-card p-6
+hover:shadow-xl transition">
 
 
 
-            {{-- Papers --}}
+<div class="flex justify-between items-start">
 
-            @if($papers->count() > 0)
 
+<div class="text-4xl">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+📄
 
+</div>
 
 
-                    @foreach($papers as $paper)
+<span class="px-3 py-1 rounded-full
+bg-teal-100 text-teal-700 text-xs font-semibold">
 
 
+{{ $paper->category }}
 
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 overflow-hidden w-full">
 
+</span>
 
-                            <div class="p-6">
 
+</div>
 
 
-                                {{-- Title --}}
 
-                                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-3">
 
-                                    {{ $paper->title }}
 
-                                </h3>
 
+<h2 class="text-xl font-bold mt-5">
 
 
+{{ $paper->title }}
 
 
-                                {{-- Category --}}
+</h2>
 
-                                <div class="mb-4">
 
 
-                                    <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full">
 
-                                        {{ $paper->category }}
 
-                                    </span>
+<p class="text-slate-500 text-sm mt-3">
 
 
-                                </div>
+{{ Str::limit($paper->abstract,150) }}
 
 
+</p>
 
 
 
 
-                                {{-- Abstract --}}
 
-                                <p class="text-gray-600 dark:text-gray-300 text-sm mb-5">
 
-                                    {{ Str::limit($paper->abstract,150) }}
+<div class="mt-5 space-y-2 text-sm">
 
-                                </p>
 
+<p>
 
+👤
 
+{{ $paper->author->name ?? 'Unknown' }}
 
+</p>
 
 
-                                {{-- Author --}}
 
-                                <p class="text-sm text-gray-500 mb-3">
+@if($paper->publication_date)
 
-                                    <strong>
-                                        Author:
-                                    </strong>
+<p>
 
+📅
 
-                                    {{ $paper->author->name ?? 'Unknown' }}
+{{ $paper->publication_date }}
 
-                                </p>
+</p>
 
+@endif
 
 
 
+</div>
 
 
-                                {{-- Date --}}
 
-                                @if($paper->publication_date)
 
 
-                                    <p class="text-sm text-gray-500 mb-5">
 
 
-                                        <strong>
-                                            Published:
-                                        </strong>
 
+<div class="mt-6 space-y-3">
 
-                                        {{ $paper->publication_date }}
 
 
-                                    </p>
+<a href="{{ route('papers.show',$paper) }}"
+class="block text-center
+px-4 py-3 rounded-xl
+bg-slate-800 text-white">
 
 
-                                @endif
+View Paper
 
 
+</a>
 
 
 
 
 
-                                {{-- Buttons --}}
+<a href="{{ route('papers.download',$paper) }}"
+class="block text-center
+px-4 py-3 rounded-xl
+bg-teal-600 text-white">
 
-                                <div class="flex flex-col gap-3 mt-5">
 
+Download PDF
 
 
-                                    {{-- View --}}
+</a>
 
-                                    <a href="{{ route('papers.show',$paper) }}"
 
-                                       class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg">
 
-                                        View
 
-                                    </a>
 
 
+<form method="POST"
+action="{{ route('papers.destroy',$paper) }}"
+onsubmit="return confirm('Delete this paper?');">
 
 
+@csrf
 
+@method('DELETE')
 
 
-                                    {{-- Download --}}
+<button
+class="w-full px-4 py-3 rounded-xl
+bg-red-600 text-white">
 
-                                    <a href="{{ route('papers.download',$paper) }}"
 
-                                       class="w-full text-center bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg">
+Delete
 
-                                        Download
 
-                                    </a>
+</button>
 
 
+</form>
 
 
 
+</div>
 
 
 
-                                    {{-- Delete --}}
+</div>
 
 
-                                    <form method="POST"
 
-                                          action="{{ route('papers.destroy',$paper) }}"
+@endforeach
 
-                                          onsubmit="return confirm('Delete this paper?');">
 
+</div>
 
-                                        @csrf
 
-                                        @method('DELETE')
 
 
+@else
 
-                                        <button
 
-                                            type="submit"
+<div class="dashboard-card p-10 text-center">
 
-                                            class="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg">
 
-                                            Delete
+<h2 class="text-xl font-bold">
 
+No Research Papers Found
 
-                                        </button>
+</h2>
 
 
+<p class="text-slate-500 mt-2">
 
-                                    </form>
+Upload your first research paper.
 
+</p>
 
 
-                                </div>
+</div>
 
 
+@endif
 
 
-                            </div>
 
 
-                        </div>
 
 
 
+<div class="mt-8">
 
+{{ $papers->links() }}
 
-                    @endforeach
+</div>
 
 
 
-                </div>
-
-
-
-
-
-            @else
-
-
-
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-10 text-center">
-
-
-                    <h3 class="text-xl font-semibold">
-
-                        No Research Papers Yet
-
-                    </h3>
-
-
-                    <p class="text-gray-500 mt-2">
-
-                        Upload your first research paper.
-
-                    </p>
-
-
-
-                </div>
-
-
-
-            @endif
-
-
-
-
-
-
-            {{-- Pagination --}}
-
-            <div class="mt-8 flex justify-center">
-
-                {{ $papers->links() }}
-
-            </div>
-
-
-
-
-
-        </div>
-
-    </div>
+</div>
 
 
 </x-app-layout>

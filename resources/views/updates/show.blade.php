@@ -1,78 +1,193 @@
 <x-app-layout>
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-            Research Update
-        </h2>
-    </x-slot>
+<div class="max-w-6xl mx-auto space-y-8">
 
-    <div class="py-8">
 
-        <div class="max-w-4xl mx-auto px-4">
 
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-8">
+{{-- Header --}}
 
-                @if($update->image)
+<div class="bg-gradient-to-r from-teal-700 to-cyan-600
+rounded-3xl p-8 text-white shadow-xl">
 
-                    <img
-                        src="{{ asset('storage/' . $update->image) }}"
-                        alt="{{ $update->title }}"
-                        class="w-full max-h-96 object-cover rounded-xl mb-6"
-                    >
 
-                @endif
+<div class="flex flex-col md:flex-row
+justify-between gap-5">
 
-                <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
-                    {{ $update->title }}
-                </h1>
 
-                <div class="mt-3 text-sm text-gray-500">
-                    Published by:
-                    <strong>
-                        {{ $update->publisher->name ?? 'Unknown' }}
-                    </strong>
+<div>
 
-                    ·
 
-                    {{ $update->created_at->format('d M Y, h:i A') }}
-                </div>
+<div class="text-5xl mb-4">
 
-                <div class="mt-8 text-gray-700 dark:text-gray-300 whitespace-pre-line leading-7">
-                    {{ $update->description }}
-                </div>
+📰
 
-                <div class="mt-8 flex gap-3">
+</div>
 
-                    <a
-                        href="{{ route('updates.index') }}"
-                        class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2.5 rounded-lg"
-                    >
-                        ← Back to Updates
-                    </a>
 
-                    <form
-                        method="POST"
-                        action="{{ route('updates.destroy', $update) }}"
-                        onsubmit="return confirm('Delete this update?');"
-                    >
-                        @csrf
-                        @method('DELETE')
+<h1 class="text-3xl md:text-4xl font-bold">
 
-                        <button
-                            type="submit"
-                            class="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-lg"
-                        >
-                            Delete
-                        </button>
+{{ $update->title }}
 
-                    </form>
+</h1>
 
-                </div>
 
-            </div>
+<p class="mt-3 text-teal-100">
 
-        </div>
+Research Update
 
-    </div>
+</p>
+
+
+</div>
+
+
+
+
+<div class="text-sm text-teal-100">
+
+
+<p>
+
+Published by:
+
+<strong class="text-white">
+
+{{ $update->publisher->name ?? 'Unknown' }}
+
+</strong>
+
+</p>
+
+
+<p class="mt-2">
+
+{{ $update->created_at->format('d M Y, h:i A') }}
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- Image --}}
+
+@if($update->image)
+
+
+<div class="dashboard-card overflow-hidden">
+
+
+<img
+src="{{ asset('storage/'.$update->image) }}"
+alt="{{ $update->title }}"
+class="w-full max-h-[500px] object-cover">
+
+
+</div>
+
+
+@endif
+
+
+
+
+
+
+
+{{-- Content --}}
+
+<div class="dashboard-card p-8">
+
+
+<h2 class="text-2xl font-bold mb-5">
+
+Update Details
+
+</h2>
+
+
+<p class="text-slate-600 leading-relaxed whitespace-pre-line">
+
+{{ $update->description }}
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+{{-- Actions --}}
+
+<div class="dashboard-card p-6 flex flex-wrap gap-4">
+
+
+<a href="{{ route('updates.index') }}"
+class="px-6 py-3 rounded-xl
+bg-slate-700 text-white">
+
+
+← Back to Updates
+
+
+</a>
+
+
+
+
+
+
+<form
+method="POST"
+action="{{ route('updates.destroy',$update) }}"
+onsubmit="return confirm('Delete this update?');">
+
+
+@csrf
+
+@method('DELETE')
+
+
+<button
+class="px-6 py-3 rounded-xl
+bg-red-600 text-white">
+
+
+Delete Update
+
+
+</button>
+
+
+</form>
+
+
+
+</div>
+
+
+
+
+</div>
+
 
 </x-app-layout>

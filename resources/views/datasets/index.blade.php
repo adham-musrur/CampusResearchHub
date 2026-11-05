@@ -1,52 +1,89 @@
 <x-app-layout>
 
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-                Research Datasets
-            </h2>
-
-            <a href="{{ route('datasets.create') }}"
-               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-                + Upload Dataset
-            </a>
-
-        </div>
-    </x-slot>
-
-    <div class="py-8">
-
-        <div class="max-w-7xl mx-auto px-4">
-
-            @if(session('success'))
-
-                <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
-                    {{ session('success') }}
-                </div>
-
-            @endif
+<div class="max-w-7xl mx-auto space-y-8">
 
 
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
 
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
-                    Research Datasets
-                </h1>
+{{-- Header --}}
 
-                <p class="text-gray-500 mt-1">
-                    Browse and manage research datasets.
-                </p>
+<div class="bg-gradient-to-r from-teal-700 to-cyan-600
+rounded-3xl p-8 text-white shadow-xl">
 
-            </div>
-            {{-- Search and Filter --}}
+
+<div class="flex flex-col md:flex-row
+justify-between gap-5">
+
+
+<div>
+
+<h1 class="text-3xl font-bold">
+
+Research Datasets
+
+</h1>
+
+
+<p class="mt-2 text-teal-100">
+
+Explore, manage and share research data resources.
+
+</p>
+
+
+</div>
+
+
+
+
+<a href="{{ route('datasets.create') }}"
+class="px-6 py-3 rounded-xl
+bg-white text-teal-700 font-semibold">
+
+
++ Upload Dataset
+
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+@if(session('success'))
+
+<div class="bg-green-100 border border-green-300
+text-green-700 px-5 py-4 rounded-xl">
+
+{{ session('success') }}
+
+</div>
+
+@endif
+
+
+
+
+
+
+
+{{-- Search --}}
+
+<div class="dashboard-card p-6">
+
 
 <form method="GET"
 action="{{ route('datasets.index') }}"
-class="bg-white dark:bg-gray-800 shadow rounded-xl p-5 mb-6">
-
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+class="grid md:grid-cols-3 gap-4">
 
 
 <input
@@ -54,29 +91,33 @@ type="text"
 name="search"
 value="{{ $search ?? '' }}"
 placeholder="Search datasets..."
-class="border rounded-lg px-3 py-2">
+class="rounded-xl">
+
+
 
 
 
 <select
 name="file_type"
-class="border rounded-lg px-3 py-2">
+class="rounded-xl">
 
 
 <option value="">
+
 All File Types
+
 </option>
 
 
 @foreach($fileTypes as $type)
 
+
 <option value="{{ $type }}"
-@if(($fileType ?? '') == $type)
-selected
-@endif
->
+@selected(($fileType ?? '')==$type)>
+
 
 {{ strtoupper($type) }}
+
 
 </option>
 
@@ -89,126 +130,285 @@ selected
 
 
 
-<button
-class="bg-blue-600 text-white rounded-lg px-4 py-2">
 
-Search
+<button
+class="rounded-xl bg-teal-600
+text-white font-semibold">
+
+
+Search Dataset
+
 
 </button>
+
+
+</form>
 
 
 </div>
 
 
+
+
+
+
+
+
+
+{{-- Dataset Cards --}}
+
+
+@if($datasets->count())
+
+
+<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+
+
+@foreach($datasets as $dataset)
+
+
+
+<div class="dashboard-card p-6
+hover:shadow-xl transition">
+
+
+
+<div class="flex justify-between items-start">
+
+
+<div class="text-5xl">
+
+📊
+
+</div>
+
+
+<span
+class="px-3 py-1 rounded-full
+bg-cyan-100 text-cyan-700
+text-xs font-semibold">
+
+
+{{ strtoupper($dataset->file_type) }}
+
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+<h2 class="text-xl font-bold mt-5">
+
+
+{{ $dataset->dataset_name }}
+
+
+</h2>
+
+
+
+
+
+
+
+<p class="text-slate-500 text-sm mt-3">
+
+
+{{ Str::limit($dataset->description,130) }}
+
+
+</p>
+
+
+
+
+
+
+
+<div class="mt-5 space-y-2 text-sm">
+
+
+@if($dataset->project)
+
+<p>
+
+🔬
+
+{{ $dataset->project->title }}
+
+</p>
+
+@endif
+
+
+
+
+
+@if($dataset->uploader)
+
+<p>
+
+👤
+
+{{ $dataset->uploader->name }}
+
+</p>
+
+@endif
+
+
+
+<p>
+
+📁
+
+{{ strtoupper($dataset->file_type) }}
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="mt-6 space-y-3">
+
+
+
+<a href="{{ route('datasets.show',$dataset) }}"
+class="block text-center
+px-4 py-3 rounded-xl
+bg-slate-800 text-white">
+
+
+View Dataset
+
+
+</a>
+
+
+
+
+
+<a href="{{ route('datasets.download',$dataset) }}"
+class="block text-center
+px-4 py-3 rounded-xl
+bg-teal-600 text-white">
+
+
+Download
+
+
+</a>
+
+
+
+
+
+<form method="POST"
+action="{{ route('datasets.destroy',$dataset) }}"
+onsubmit="return confirm('Delete this dataset?');">
+
+
+@csrf
+
+@method('DELETE')
+
+
+<button
+class="w-full px-4 py-3 rounded-xl
+bg-red-600 text-white">
+
+
+Delete
+
+
+</button>
+
+
 </form>
 
-            @if($datasets->count())
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                    @foreach($datasets as $dataset)
-
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-6">
-
-                            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                                {{ $dataset->dataset_name }}
-                            </h3>
 
 
-                            <p class="text-sm text-gray-500 mb-3">
-                                {{ Str::limit($dataset->description, 120) }}
-                            </p>
+</div>
 
 
-                            @if($dataset->project)
 
-                                <p class="text-sm mb-2">
-                                    <strong>Project:</strong>
-                                    {{ $dataset->project->title }}
-                                </p>
-
-                            @endif
+</div>
 
 
-                            <p class="text-sm text-gray-500 mb-2">
-                                <strong>File type:</strong>
-                                {{ strtoupper($dataset->file_type) }}
-                            </p>
 
 
-                            @if($dataset->uploader)
-
-                                <p class="text-sm text-gray-500 mb-4">
-                                    <strong>Uploaded by:</strong>
-                                    {{ $dataset->uploader->name }}
-                                </p>
-
-                            @endif
+@endforeach
 
 
-                            <div class="flex flex-wrap gap-2">
-
-                                <a href="{{ route('datasets.show', $dataset) }}"
-                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm">
-                                    View
-                                </a>
+</div>
 
 
-                                <a href="{{ route('datasets.download', $dataset) }}"
-                                   class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm">
-                                    Download
-                                </a>
 
 
-                                <form method="POST"
-                                      action="{{ route('datasets.destroy', $dataset) }}"
-                                      onsubmit="return confirm('Delete this dataset?');">
 
-                                    @csrf
-                                    @method('DELETE')
 
-                                    <button type="submit"
-                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm">
-                                        Delete
-                                    </button>
+@else
 
-                                </form>
 
-                            </div>
+<div class="dashboard-card p-10 text-center">
 
-                        </div>
 
-                    @endforeach
+<div class="text-5xl mb-4">
 
-                </div>
+📂
 
-            @else
+</div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-10 text-center">
 
-                    <h3 class="text-xl font-semibold">
-                        No datasets found
-                    </h3>
+<h2 class="text-xl font-bold">
 
-                    <p class="text-gray-500 mt-2 mb-6">
-                        Upload your first research dataset.
-                    </p>
+No datasets found
 
-                    <a href="{{ route('datasets.create') }}"
-                       class="bg-blue-600 text-white px-5 py-3 rounded-lg">
-                        Upload Dataset
-                    </a>
+</h2>
 
-                </div>
 
-            @endif
+<p class="text-slate-500 mt-2">
 
-        </div>
+Upload your first research dataset.
 
-    </div>
-    <div class="mt-8">
+</p>
+
+
+</div>
+
+
+@endif
+
+
+
+
+
+
+
+
+<div class="mt-8">
 
 {{ $datasets->links() }}
+
+</div>
+
+
+
 
 </div>
 

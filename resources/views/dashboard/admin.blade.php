@@ -1,183 +1,411 @@
 <x-app-layout>
 
-    <x-slot name="header">
-        <div>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Admin Dashboard
-            </h2>
 
-            <p class="text-sm text-gray-500 mt-1">
-                Campus Research Hub Management
-            </p>
-        </div>
-    </x-slot>
-
-    <div class="py-10">
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            {{-- Welcome --}}
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
-
-                <h3 class="text-2xl font-bold text-gray-800 dark:text-white">
-                    Welcome, {{ auth()->user()->name }} 👋
-                </h3>
-
-                <p class="text-gray-600 dark:text-gray-300 mt-2">
-                    You are logged in as an administrator.
-                    Manage research projects, papers, datasets and updates from here.
-                </p>
-
-            </div>
+<div class="space-y-10">
 
 
-            {{-- Management Cards --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                {{-- Projects --}}
-                <a href="{{ route('projects.index') }}"
-                   class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 hover:shadow-lg transition">
-
-                    <div class="text-3xl mb-3">📁</div>
-
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
-                        Research Projects
-                    </h3>
-
-                    <p class="text-sm text-gray-500 mt-2">
-                        View and manage research projects.
-                    </p>
-
-                </a>
+{{-- HERO --}}
 
 
-                {{-- Papers --}}
-                <a href="{{ route('papers.index') }}"
-                   class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 hover:shadow-lg transition">
-
-                    <div class="text-3xl mb-3">📄</div>
-
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
-                        Research Papers
-                    </h3>
-
-                    <p class="text-sm text-gray-500 mt-2">
-                        View uploaded research papers.
-                    </p>
-
-                </a>
+<div class="relative overflow-hidden
+bg-gradient-to-r from-teal-700 via-cyan-600 to-blue-600
+rounded-3xl p-10 text-white shadow-xl">
 
 
-                {{-- Datasets --}}
-                <a href="{{ route('datasets.index') }}"
-                   class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 hover:shadow-lg transition">
-
-                    <div class="text-3xl mb-3">🗂️</div>
-
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
-                        Datasets
-                    </h3>
-
-                    <p class="text-sm text-gray-500 mt-2">
-                        Manage research datasets.
-                    </p>
-
-                </a>
+<div class="relative z-10">
 
 
-                {{-- Updates --}}
-                <a href="{{ route('updates.index') }}"
-                   class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 hover:shadow-lg transition">
+<h1 class="text-4xl font-bold">
 
-                    <div class="text-3xl mb-3">📢</div>
+Welcome back,
+{{ auth()->user()->name }} 👋
 
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
-                        Research Updates
-                    </h3>
-
-                    <p class="text-sm text-gray-500 mt-2">
-                        Publish and manage research updates.
-                    </p>
-
-                </a>
-
-            </div>
+</h1>
 
 
-            {{-- Quick Actions --}}
-            <div class="mt-8">
+<p class="mt-3 text-teal-100 text-lg">
 
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-                    Quick Actions
-                </h3>
+Control research activities, users and academic resources from one place.
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-                    <a href="{{ route('projects.create') }}"
-                       class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-5 py-3 text-center transition">
-                        + Create Research Project
-                    </a>
-
-                    <a href="{{ route('papers.create') }}"
-                       class="bg-green-600 hover:bg-green-700 text-white rounded-lg px-5 py-3 text-center transition">
-                        + Upload Research Paper
-                    </a>
-
-                    <a href="{{ route('datasets.create') }}"
-                       class="bg-purple-600 hover:bg-purple-700 text-white rounded-lg px-5 py-3 text-center transition">
-                        + Upload Dataset
-                    </a>
-
-                </div>
-
-            </div>
+</p>
 
 
-            {{-- System Information --}}
-            <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
 
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
-                    System Information
-                </h3>
+<div class="mt-6 flex gap-4">
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
 
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Current Role
-                        </p>
+<a href="{{ route('admin.users.index') }}"
+class="bg-white text-teal-700 px-6 py-3 rounded-xl font-semibold">
 
-                        <p class="font-semibold text-gray-800 dark:text-white mt-1">
-                            {{ ucfirst(auth()->user()->role) }}
-                        </p>
-                    </div>
+Manage Users
 
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Account
-                        </p>
+</a>
 
-                        <p class="font-semibold text-gray-800 dark:text-white mt-1">
-                            {{ auth()->user()->email }}
-                        </p>
-                    </div>
 
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Platform
-                        </p>
 
-                        <p class="font-semibold text-gray-800 dark:text-white mt-1">
-                            Campus Research Hub
-                        </p>
-                    </div>
+<a href="{{ route('research.public') }}"
+class="bg-white/20 text-white px-6 py-3 rounded-xl font-semibold">
 
-                </div>
+View Research
 
-            </div>
+</a>
 
-        </div>
 
-    </div>
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="absolute right-10 top-10 text-8xl opacity-20">
+
+🎓
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+{{-- STATISTICS --}}
+
+
+<div class="grid grid-cols-1 sm:grid-cols-2
+lg:grid-cols-5 gap-6">
+
+
+
+@php
+
+$cards = [
+
+[
+'icon'=>'📁',
+'title'=>'Projects',
+'value'=>$stats['projects']
+],
+
+[
+'icon'=>'📄',
+'title'=>'Papers',
+'value'=>$stats['papers']
+],
+
+[
+'icon'=>'📊',
+'title'=>'Datasets',
+'value'=>$stats['datasets']
+],
+
+[
+'icon'=>'📝',
+'title'=>'Updates',
+'value'=>$stats['updates']
+],
+
+[
+'icon'=>'💬',
+'title'=>'Discussions',
+'value'=>$stats['discussions']
+]
+
+];
+
+@endphp
+
+
+
+
+
+@foreach($cards as $card)
+
+
+<div class="dashboard-card p-6
+hover:-translate-y-1 transition duration-300">
+
+
+<div class="flex justify-between">
+
+
+<div>
+
+<p class="text-sm text-slate-500">
+
+{{ $card['title'] }}
+
+</p>
+
+
+
+<h2 class="text-4xl font-bold mt-3 text-teal-700">
+
+{{ $card['value'] }}
+
+</h2>
+
+
+</div>
+
+
+<div class="text-4xl">
+
+{{ $card['icon'] }}
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+@endforeach
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- QUICK ACTIONS --}}
+
+
+<div class="dashboard-card p-8">
+
+
+<h2 class="text-2xl font-bold mb-6">
+
+Quick Actions
+
+</h2>
+
+
+
+<div class="grid md:grid-cols-3 gap-6">
+
+
+
+<a href="{{ route('projects.create') }}"
+class="rounded-2xl p-6
+bg-teal-600 text-white
+hover:shadow-xl transition">
+
+
+<div class="text-4xl mb-4">
+
+➕
+
+</div>
+
+
+<h3 class="text-xl font-bold">
+
+Create Project
+
+</h3>
+
+
+<p class="mt-2 text-teal-100">
+
+Start new research work.
+
+</p>
+
+
+</a>
+
+
+
+
+
+
+<a href="{{ route('papers.create') }}"
+class="rounded-2xl p-6
+bg-slate-900 text-white
+hover:shadow-xl transition">
+
+
+<div class="text-4xl mb-4">
+
+📄
+
+</div>
+
+
+<h3 class="text-xl font-bold">
+
+Upload Paper
+
+</h3>
+
+
+<p class="mt-2 text-slate-300">
+
+Publish research documents.
+
+</p>
+
+
+</a>
+
+
+
+
+
+
+<a href="{{ route('datasets.create') }}"
+class="rounded-2xl p-6
+bg-cyan-600 text-white
+hover:shadow-xl transition">
+
+
+<div class="text-4xl mb-4">
+
+📊
+
+</div>
+
+
+<h3 class="text-xl font-bold">
+
+Upload Dataset
+
+</h3>
+
+
+<p class="mt-2 text-cyan-100">
+
+Share research data.
+
+</p>
+
+
+</a>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- SYSTEM INFO --}}
+
+
+<div class="dashboard-card p-8">
+
+
+<h2 class="text-2xl font-bold mb-6">
+
+System Information
+
+</h2>
+
+
+
+<div class="grid md:grid-cols-3 gap-6">
+
+
+
+<div>
+
+<p class="text-sm text-slate-500">
+
+Current Role
+
+</p>
+
+
+<p class="font-bold text-teal-700">
+
+{{ auth()->user()->role }}
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div>
+
+<p class="text-sm text-slate-500">
+
+Account
+
+</p>
+
+
+<p class="font-bold">
+
+{{ auth()->user()->email }}
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div>
+
+<p class="text-sm text-slate-500">
+
+Platform
+
+</p>
+
+
+<p class="font-bold">
+
+CampusResearchHub
+
+</p>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
 
 </x-app-layout>

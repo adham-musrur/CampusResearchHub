@@ -1,144 +1,299 @@
 <x-app-layout>
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-            Upload Dataset
-        </h2>
-    </x-slot>
-
-    <div class="py-8">
-
-        <div class="max-w-3xl mx-auto px-4">
-
-            <div class="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-6">
-
-                <h1 class="text-2xl font-bold mb-6">
-                    Upload Research Dataset
-                </h1>
+<div class="max-w-5xl mx-auto space-y-8">
 
 
-                @if($errors->any())
 
-                    <div class="mb-6 bg-red-100 border border-red-400 text-red-700 p-4 rounded-lg">
+{{-- Header --}}
 
-                        <ul class="list-disc ml-5">
-
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-
-                        </ul>
-
-                    </div>
-
-                @endif
+<div class="bg-gradient-to-r from-teal-700 to-cyan-600
+rounded-3xl p-8 text-white shadow-xl">
 
 
-                <form method="POST"
-                      action="{{ route('datasets.store') }}"
-                      enctype="multipart/form-data">
+<h1 class="text-3xl font-bold">
 
-                    @csrf
+Upload Research Dataset
 
-
-                    <div class="mb-5">
-
-                        <label class="block font-medium mb-2">
-                            Research Project
-                        </label>
-
-                        <select name="project_id"
-                                class="w-full border-gray-300 rounded-lg"
-                                required>
-
-                            <option value="">
-                                Select Project
-                            </option>
-
-                            @foreach($projects as $project)
-
-                                <option value="{{ $project->id }}"
-                                    {{ old('project_id') == $project->id ? 'selected' : '' }}>
-
-                                    {{ $project->title }}
-
-                                </option>
-
-                            @endforeach
-
-                        </select>
-
-                    </div>
+</h1>
 
 
-                    <div class="mb-5">
+<p class="mt-2 text-teal-100">
 
-                        <label class="block font-medium mb-2">
-                            Dataset Name
-                        </label>
+Share valuable research data with the academic community.
 
-                        <input type="text"
-                               name="dataset_name"
-                               value="{{ old('dataset_name') }}"
-                               class="w-full border-gray-300 rounded-lg"
-                               required>
-
-                    </div>
+</p>
 
 
-                    <div class="mb-5">
-
-                        <label class="block font-medium mb-2">
-                            Description
-                        </label>
-
-                        <textarea name="description"
-                                  rows="5"
-                                  class="w-full border-gray-300 rounded-lg"
-                                  required>{{ old('description') }}</textarea>
-
-                    </div>
+</div>
 
 
-                    <div class="mb-6">
-
-                        <label class="block font-medium mb-2">
-                            Dataset File
-                        </label>
-
-                        <input type="file"
-                               name="file"
-                               class="w-full border border-gray-300 rounded-lg p-2"
-                               required>
-
-                        <p class="text-sm text-gray-500 mt-1">
-                            Maximum file size: 50 MB
-                        </p>
-
-                    </div>
 
 
-                    <div class="flex gap-3">
-
-                        <button type="submit"
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg">
-                            Upload Dataset
-                        </button>
 
 
-                        <a href="{{ route('datasets.index') }}"
-                           class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2.5 rounded-lg">
-                            Cancel
-                        </a>
 
-                    </div>
+@if($errors->any())
 
-                </form>
+<div class="bg-red-100 border border-red-300
+text-red-700 p-5 rounded-xl">
 
-            </div>
 
-        </div>
+<ul class="list-disc ml-5">
 
-    </div>
+@foreach($errors->all() as $error)
+
+<li>{{ $error }}</li>
+
+@endforeach
+
+</ul>
+
+
+</div>
+
+@endif
+
+
+
+
+
+
+
+{{-- Form --}}
+
+<div class="dashboard-card p-8">
+
+
+<form method="POST"
+action="{{ route('datasets.store') }}"
+enctype="multipart/form-data">
+
+
+@csrf
+
+
+
+
+
+
+
+{{-- Project --}}
+
+<div class="mb-6">
+
+
+<label class="block font-semibold mb-2">
+
+Research Project
+
+</label>
+
+
+<select
+name="project_id"
+class="w-full rounded-xl"
+required>
+
+
+<option value="">
+
+Select Research Project
+
+</option>
+
+
+@foreach($projects as $project)
+
+
+<option value="{{ $project->id }}"
+@selected(old('project_id')==$project->id)>
+
+
+{{ $project->title }}
+
+
+</option>
+
+
+@endforeach
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+
+{{-- Dataset Name --}}
+
+<div class="mb-6">
+
+
+<label class="block font-semibold mb-2">
+
+Dataset Name
+
+</label>
+
+
+<input
+type="text"
+name="dataset_name"
+value="{{ old('dataset_name') }}"
+placeholder="Example: Medical Image Dataset"
+class="w-full rounded-xl"
+required>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- Description --}}
+
+<div class="mb-6">
+
+
+<label class="block font-semibold mb-2">
+
+Dataset Description
+
+</label>
+
+
+<textarea
+name="description"
+rows="6"
+placeholder="Describe your dataset..."
+class="w-full rounded-xl"
+required>{{ old('description') }}</textarea>
+
+
+</div>
+
+
+
+
+
+
+
+
+{{-- File Upload --}}
+
+<div class="mb-8">
+
+
+<label class="block font-semibold mb-3">
+
+Upload Dataset File
+
+</label>
+
+
+
+
+<div class="border-2 border-dashed
+rounded-2xl p-10 text-center">
+
+
+<div class="text-6xl mb-4">
+
+📊
+
+</div>
+
+
+
+<input
+type="file"
+name="file"
+class="w-full"
+required>
+
+
+
+<p class="text-sm text-slate-500 mt-3">
+
+Maximum file size: 50 MB
+
+</p>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{{-- Buttons --}}
+
+<div class="flex gap-4">
+
+
+<button
+type="submit"
+class="px-8 py-3 rounded-xl
+bg-teal-600 text-white font-semibold">
+
+
+Upload Dataset
+
+
+</button>
+
+
+
+
+
+<a href="{{ route('datasets.index') }}"
+class="px-8 py-3 rounded-xl
+bg-slate-700 text-white">
+
+
+Cancel
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+</div>
+
 
 </x-app-layout>

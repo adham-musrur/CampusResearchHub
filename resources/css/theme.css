@@ -1,530 +1,433 @@
 /* =========================================================
-   Campus Research Hub
-   Teal + Light Blue Theme
-   ========================================================= */
+   CAMPUS RESEARCH HUB - DASHBOARD LAYOUT
+========================================================= */
 
-:root {
-    --teal: rgb(4, 134, 144);
-    --teal-dark: rgb(2, 93, 101);
-    --teal-light: rgb(224, 247, 250);
 
-    --page-bg: rgb(239, 246, 255);
+/* Sidebar container */
 
-    --white: rgb(255, 255, 255);
+.sidebar-container {
 
-    --text: rgb(30, 41, 59);
-    --text-secondary: rgb(71, 85, 105);
-    --border: rgb(203, 213, 225);
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+
+    width: 290px;
+
+    height: 100vh;
+
+    z-index: 1000;
+
 }
 
-/* =========================================================
-   PAGE
-   ========================================================= */
 
-html,
-body {
-    background-color: var(--page-bg) !important;
-    color: var(--text) !important;
-}
 
-body {
+/* Main content */
+
+.dashboard-content {
+
+    margin-left: 290px;
+
     min-height: 100vh;
+
+    background: #eff6ff;
+
 }
 
-/* =========================================================
-   HEADER
-   ========================================================= */
 
-header {
-    background-color: rgb(4, 134, 144) !important;
-    color: #ffffff !important;
-}
 
-header *,
-header a,
-header button {
-    color: #ffffff !important;
-}
+/* Top header */
 
-header a:hover,
-header button:hover {
-    color: #e0f7fa !important;
-}
+.dashboard-header {
 
-/* Navigation */
+    height: 80px;
 
-nav {
-    background-color: rgb(4, 134, 144) !important;
-    color: #ffffff !important;
-}
+    background: #ffffff;
 
-nav a,
-nav button {
-    color: #ffffff !important;
-}
+    border-bottom: 1px solid #e2e8f0;
 
-nav a:hover,
-nav button:hover {
-    color: #e0f7fa !important;
-    background-color: rgba(255, 255, 255, 0.10) !important;
-}
+    display: flex;
 
-/* =========================================================
-   MAIN CONTENT
-   ========================================================= */
-
-main {
-    background-color: rgb(239, 246, 255) !important;
-    color: var(--text) !important;
-}
-
-/* =========================================================
-   CONTENT CARDS
-   ========================================================= */
-
-.bg-white {
-    background-color: #ffffff !important;
-    color: var(--text) !important;
-}
-
-/* Common Laravel/Tailwind card containers */
-
-.rounded-lg,
-.rounded-xl,
-.rounded-2xl {
-    color: var(--text);
-}
-
-/* =========================================================
-   ADMIN / SYSTEM INFORMATION
-   ========================================================= */
-
-/* Section containing:
-   Current Role
-   Account
-   Platform
-*/
-
-.system-information,
-.system-info,
-.account-information,
-.account-info {
-    background-color: #ffffff !important;
-    color: var(--text) !important;
-}
-
-/* Force readable text inside white information cards */
-
-.bg-white p,
-.bg-white span,
-.bg-white div,
-.bg-white label {
-    color: var(--text) !important;
-}
-
-/* Labels such as Current Role, Account, Platform */
-
-.bg-white .text-gray-500,
-.bg-white .text-gray-600,
-.bg-white .text-gray-700 {
-    color: var(--text-secondary) !important;
-}
-
-/* Important values */
-
-.bg-white .font-medium,
-.bg-white .font-semibold,
-.bg-white .font-bold {
-    color: var(--teal-dark) !important;
-}
-
-/* Email/account text */
-
-.bg-white a {
-    color: var(--teal) !important;
-}
-
-/* =========================================================
-   HEADINGS
-   ========================================================= */
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    color: var(--text) !important;
-}
-
-/* Teal headings */
-
-.text-blue-500,
-.text-blue-600,
-.text-blue-700,
-.text-blue-800,
-.text-teal-500,
-.text-teal-600,
-.text-teal-700,
-.text-teal-800 {
-    color: var(--teal) !important;
-}
-
-/* =========================================================
-   NORMAL TEXT
-   ========================================================= */
-
-p {
-    color: var(--text);
-}
-
-.text-gray-500 {
-    color: var(--text-secondary) !important;
-}
-
-.text-gray-600 {
-    color: var(--text-secondary) !important;
-}
-
-.text-gray-700 {
-    color: var(--text) !important;
-}
-
-.text-gray-800,
-.text-gray-900 {
-    color: var(--text) !important;
-}
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
-button,
-.btn,
-.btn-primary {
-    background-color: rgb(4, 134, 144) !important;
-    border-color: rgb(4, 134, 144) !important;
-    color: #ffffff !important;
-}
-
-button:hover,
-.btn:hover,
-.btn-primary:hover {
-    background-color: rgb(2, 93, 101) !important;
-    border-color: rgb(2, 93, 101) !important;
-    color: #ffffff !important;
-}
-
-/* =========================================================
-   LINKS
-   ========================================================= */
-
-a {
-    color: var(--teal);
-}
-
-a:hover {
-    color: var(--teal-dark);
-}
-
-/* =========================================================
-   TABLES
-   ========================================================= */
-
-table {
-    background-color: #ffffff !important;
-    color: var(--text) !important;
-}
-
-thead {
-    background-color: var(--teal-light) !important;
-}
-
-thead th {
-    color: var(--teal-dark) !important;
-}
-
-tbody {
-    background-color: #ffffff !important;
-}
-
-tbody td {
-    color: var(--text) !important;
-}
-
-tbody tr {
-    border-color: var(--border) !important;
-}
-
-tbody tr:hover {
-    background-color: rgb(248, 250, 252) !important;
-}
-
-/* =========================================================
-   FORMS
-   ========================================================= */
-
-input,
-textarea,
-select {
-    background-color: #ffffff !important;
-    color: var(--text) !important;
-    border-color: var(--border) !important;
-}
-
-input::placeholder,
-textarea::placeholder {
-    color: rgb(148, 163, 184) !important;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: var(--teal) !important;
-    box-shadow: 0 0 0 3px rgba(4, 134, 144, 0.15) !important;
-    outline: none !important;
-}
-
-/* =========================================================
-   LIGHT BLUE SECTIONS
-   ========================================================= */
-
-.bg-blue-50,
-.bg-gray-50 {
-    background-color: rgb(239, 246, 255) !important;
-}
-
-.bg-blue-100,
-.bg-gray-100 {
-    background-color: var(--teal-light) !important;
-}
-
-/* =========================================================
-   TEAL BACKGROUNDS
-   ========================================================= */
-
-.bg-blue-500,
-.bg-blue-600,
-.bg-blue-700,
-.bg-blue-800 {
-    background-color: rgb(4, 134, 144) !important;
-}
-
-/* =========================================================
-   BORDERS
-   ========================================================= */
-
-.border-gray-200,
-.border-gray-300,
-.border-blue-200,
-.border-blue-300 {
-    border-color: var(--border) !important;
-}
-
-/* =========================================================
-   DASHBOARD CARDS
-   ========================================================= */
-
-.dashboard-card,
-.card {
-    background-color: #ffffff !important;
-    color: var(--text) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 12px;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-footer {
-    background-color: rgb(4, 134, 144) !important;
-    color: #ffffff !important;
-}
-
-footer *,
-footer a {
-    color: #ffffff !important;
-}
-
-footer a:hover {
-    color: #e0f7fa !important;
-}
-
-/* =========================================================
-   DASHBOARD SIDEBAR
-   ========================================================= */
-
-.dashboard-sidebar {
-    background-color: rgb(4, 134, 144) !important;
-    color: #ffffff !important;
-}
-
-.dashboard-sidebar a {
-    color: #ffffff !important;
-}
-
-.dashboard-sidebar a:hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
-}
-
-/* =========================================================
-   BADGES
-   ========================================================= */
-
-.badge,
-.badge-primary {
-    background-color: rgb(4, 134, 144) !important;
-    color: #ffffff !important;
-}
-
-/* =========================================================
-   DIVIDERS
-   ========================================================= */
-
-hr {
-    border-color: var(--border) !important;
-}
-
-/* =========================================================
-   ACTION BUTTONS - HIGH CONTRAST
-   ========================================================= */
-
-/* Primary action buttons */
-a[href*="/create"],
-a[href*="/download"],
-a[href*="/projects/"],
-a[href*="/papers/"],
-a[href*="/datasets/"],
-a[href*="/updates/"],
-button[type="submit"],
-button[type="button"] {
-    color: #ffffff !important;
-    background-color: rgb(4, 134, 144) !important;
-    border-color: rgb(4, 134, 144) !important;
-    text-decoration: none !important;
-}
-
-/* Hover */
-a[href*="/create"]:hover,
-a[href*="/download"]:hover,
-a[href*="/projects/"]:hover,
-a[href*="/papers/"]:hover,
-a[href*="/datasets/"]:hover,
-a[href*="/updates/"]:hover,
-button[type="submit"]:hover,
-button[type="button"]:hover {
-    color: #ffffff !important;
-    background-color: rgb(2, 93, 101) !important;
-    border-color: rgb(2, 93, 101) !important;
-}
-
-/* Make button text always visible */
-a[href*="/create"] *,
-a[href*="/download"] *,
-a[href*="/projects/"] *,
-a[href*="/papers/"] *,
-a[href*="/datasets/"] *,
-a[href*="/updates/"] *,
-button[type="submit"] *,
-button[type="button"] * {
-    color: #ffffff !important;
-}
-
-/* Buttons with common Tailwind classes */
-.bg-indigo-600,
-.bg-indigo-500,
-.bg-green-600,
-.bg-green-500,
-.bg-red-600,
-.bg-yellow-500 {
-    color: #ffffff !important;
-}
-
-/* White text on colored buttons */
-.bg-indigo-600 *,
-.bg-indigo-500 *,
-.bg-green-600 *,
-.bg-green-500 *,
-.bg-red-600 *,
-.bg-yellow-500 * {
-    color: #ffffff !important;
-}
-
-/* Action button appearance */
-a[href*="/create"],
-a[href*="/download"],
-button[type="submit"] {
-    display: inline-flex !important;
     align-items: center;
-    justify-content: center;
-    padding: 0.5rem 1rem !important;
-    border-radius: 0.5rem !important;
-    font-weight: 600 !important;
-    transition: all 0.2s ease !important;
+
+    justify-content: space-between;
+
+    padding: 0 32px;
+
 }
+
+
+
+/* Page content */
+
+.dashboard-main {
+
+    padding: 32px;
+
+}
+
+
+
+
+
 
 /* =========================================================
-   VIEW BUTTONS
-   ========================================================= */
+   SIDEBAR
+========================================================= */
 
-a[href$="/1"] {
-    color: rgb(4, 134, 144) !important;
-    background-color: #ffffff !important;
-    border: 1px solid rgb(4, 134, 144) !important;
-    padding: 0.45rem 0.9rem !important;
-    border-radius: 0.5rem !important;
-    font-weight: 600 !important;
+
+.sidebar-wrapper {
+
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+
+    width: 290px;
+
+    height: 100vh;
+
+    background:
+    linear-gradient(
+        180deg,
+        #0f172a,
+        #083344
+    );
+
+    color:white;
+
+    display:flex;
+
+    flex-direction:column;
+
+    box-shadow:
+    8px 0 25px rgba(0,0,0,.15);
+
 }
 
-a[href$="/1"]:hover {
-    color: #ffffff !important;
-    background-color: rgb(4, 134, 144) !important;
+
+
+
+.sidebar-logo {
+
+    height:110px;
+
+    padding:20px;
+
+    border-bottom:
+    1px solid rgba(255,255,255,.1);
+
+    display:flex;
+
+    align-items:center;
+
 }
 
-/* =========================================================
-   DOWNLOAD BUTTON
-   ========================================================= */
 
-a[href*="/download"] {
-    color: #ffffff !important;
-    background-color: rgb(4, 134, 144) !important;
-    border: 1px solid rgb(4, 134, 144) !important;
+
+.sidebar-logo a {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    text-decoration:none;
+
 }
 
-a[href*="/download"]:hover {
-    background-color: rgb(2, 93, 101) !important;
+
+
+.sidebar-logo img {
+
+    width:55px;
+
+    height:55px;
+
+    object-fit:contain;
+
 }
 
-/* =========================================================
-   CREATE / UPLOAD / POST BUTTONS
-   ========================================================= */
 
-a[href="/projects/create"],
-a[href="/papers/create"],
-a[href="/updates/create"] {
-    color: #ffffff !important;
-    background-color: rgb(4, 134, 144) !important;
-    border: 1px solid rgb(4, 134, 144) !important;
-    padding: 0.65rem 1.1rem !important;
-    border-radius: 0.5rem !important;
-    font-weight: 600 !important;
+
+.sidebar-logo h2 {
+
+    color:white !important;
+
+    font-size:18px;
+
+    font-weight:800;
+
 }
 
-a[href="/projects/create"]:hover,
-a[href="/papers/create"]:hover,
-a[href="/updates/create"]:hover {
-    color: #ffffff !important;
-    background-color: rgb(2, 93, 101) !important;
+
+
+.sidebar-logo p {
+
+    color:#94a3b8 !important;
+
+    font-size:12px;
+
 }
 
-/* =========================================================
-   ICONS INSIDE BUTTONS
-   ========================================================= */
 
-a[href*="/create"] svg,
-a[href*="/download"] svg,
-button svg {
-    color: #ffffff !important;
-    stroke: #ffffff !important;
+
+
+
+
+/* USER PROFILE */
+
+
+.sidebar-user {
+
+    margin:20px;
+
+    padding:15px;
+
+    background:
+    rgba(255,255,255,.08);
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+
+.avatar {
+
+    width:45px;
+
+    height:45px;
+
+    background:#048690;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:white;
+
+    font-weight:bold;
+
+}
+
+
+
+.sidebar-user h4 {
+
+    color:white !important;
+
+    margin:0;
+
+}
+
+
+
+.sidebar-user span {
+
+    color:#94a3b8;
+
+    font-size:12px;
+
+}
+
+
+
+
+
+
+
+/* MENU */
+
+
+.sidebar-menu {
+
+    padding:0 18px;
+
+    flex:1;
+
+    overflow-y:auto;
+
+}
+
+
+
+.sidebar-menu a {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:13px 16px;
+
+    margin-bottom:8px;
+
+    border-radius:14px;
+
+    color:#cbd5e1 !important;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.2s;
+
+}
+
+
+
+.sidebar-menu a:hover {
+
+    background:
+    rgba(4,134,144,.35);
+
+    color:white !important;
+
+}
+
+
+
+.sidebar-menu a.active {
+
+    background:#048690;
+
+    color:white !important;
+
+}
+
+
+
+.sidebar-menu span {
+
+    width:28px;
+
+}
+
+
+
+
+
+
+/* DIVIDER */
+
+
+.sidebar-divider {
+
+    height:1px;
+
+    background:
+    rgba(255,255,255,.15);
+
+    margin:20px 0;
+
+}
+
+
+
+.sidebar-title {
+
+    color:#94a3b8;
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+    margin-bottom:10px;
+
+}
+
+
+
+
+
+
+
+/* LOGOUT */
+
+
+.sidebar-footer {
+
+    padding:20px;
+
+    border-top:
+    1px solid rgba(255,255,255,.1);
+
+}
+
+
+
+.sidebar-footer button {
+
+    width:100%;
+
+    padding:13px;
+
+    border-radius:12px;
+
+    border:none;
+
+    background:#991b1b;
+
+    color:white;
+
+    font-weight:700;
+
+}
+
+
+
+.sidebar-footer button:hover {
+
+    background:#dc2626;
+
+}
+
+
+
+
+
+
+
+/* MOBILE */
+
+
+@media(max-width:900px){
+
+
+.sidebar-container {
+
+    display:none;
+
+}
+
+
+.dashboard-content {
+
+    margin-left:0;
+
+}
+
+
+.dashboard-main {
+
+    padding:20px;
+
+}
+
+
 }

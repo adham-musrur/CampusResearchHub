@@ -1,53 +1,110 @@
 <x-app-layout>
 
-<div class="max-w-7xl mx-auto py-10 px-4">
+<div class="max-w-7xl mx-auto space-y-10">
 
 
-<h1 class="text-3xl font-bold mb-8">
-CampusResearchHub Research Portal
+
+{{-- Hero Section --}}
+
+<div class="bg-gradient-to-r from-teal-700 to-cyan-600
+rounded-3xl p-10 text-white shadow-xl">
+
+
+<h1 class="text-4xl md:text-5xl font-bold">
+
+CampusResearchHub
+
 </h1>
+
+
+<p class="mt-4 text-xl text-teal-100">
+
+Discover academic research, datasets and innovation from our research community.
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
 
 
 
 {{-- Research Papers --}}
 
-<div class="bg-white rounded-xl shadow p-6 mb-8">
+<div class="space-y-5">
 
 
-<h2 class="text-xl font-bold mb-5">
-Research Papers
+<div class="flex items-center justify-between">
+
+
+<h2 class="text-3xl font-bold">
+
+📄 Research Papers
+
 </h2>
+
+
+</div>
+
+
+
+
+
+<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
 
 
 @forelse($papers as $paper)
 
 
-<div class="border-b pb-4 mb-4">
+<div class="dashboard-card p-6">
 
 
-<h3 class="text-lg font-semibold">
+<div class="text-4xl mb-4">
+
+📄
+
+</div>
+
+
+
+<h3 class="text-xl font-bold">
+
 {{ $paper->title }}
+
 </h3>
 
 
-<p class="text-sm text-gray-500">
 
-Category:
+<span class="inline-block mt-3 px-3 py-1 rounded-full
+bg-teal-100 text-teal-700 text-sm">
+
+
 {{ $paper->category }}
 
+
+</span>
+
+
+
+<p class="text-slate-500 mt-4">
+
+{{ Str::limit($paper->abstract,120) }}
+
 </p>
 
 
-<p class="mt-2">
-
-{{ $paper->abstract }}
-
-</p>
 
 
-<p class="text-sm text-gray-500 mt-2">
+<p class="text-sm text-slate-500 mt-4">
 
 Author:
+
 {{ $paper->author->name ?? 'Unknown' }}
 
 </p>
@@ -59,15 +116,25 @@ Author:
 
 @empty
 
-<p>
+
+<div class="dashboard-card p-6">
+
 No research papers available.
-</p>
+
+</div>
 
 
 @endforelse
 
 
 </div>
+
+
+</div>
+
+
+
+
 
 
 
@@ -75,22 +142,39 @@ No research papers available.
 
 {{-- Datasets --}}
 
-<div class="bg-white rounded-xl shadow p-6 mb-8">
+<div class="space-y-5">
 
 
-<h2 class="text-xl font-bold mb-5">
-Datasets
+<h2 class="text-3xl font-bold">
+
+📊 Research Datasets
+
 </h2>
+
+
+
+
+
+<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
 
 
 
 @forelse($datasets as $dataset)
 
 
-<div class="border-b pb-4 mb-4">
+
+<div class="dashboard-card p-6">
 
 
-<h3 class="text-lg font-semibold">
+<div class="text-4xl mb-4">
+
+📊
+
+</div>
+
+
+
+<h3 class="text-xl font-bold">
 
 {{ $dataset->dataset_name }}
 
@@ -98,29 +182,38 @@ Datasets
 
 
 
-<p>
 
-{{ $dataset->description }}
+<p class="text-slate-500 mt-3">
+
+{{ Str::limit($dataset->description,120) }}
 
 </p>
 
 
 
-<p class="text-sm text-gray-500">
+
+<div class="mt-4 text-sm text-slate-500">
+
+
+<p>
+
+File:
+
+{{ strtoupper($dataset->file_type) }}
+
+</p>
+
+
+<p>
 
 Uploaded By:
+
 {{ $dataset->uploader->name ?? 'Unknown' }}
 
 </p>
 
 
-
-<p class="text-sm text-gray-500">
-
-Type:
-{{ $dataset->file_type }}
-
-</p>
+</div>
 
 
 
@@ -128,11 +221,16 @@ Type:
 
 
 
+
 @empty
 
-<p>
+
+<div class="dashboard-card p-6">
+
 No datasets available.
-</p>
+
+</div>
+
 
 @endforelse
 
@@ -141,30 +239,57 @@ No datasets available.
 </div>
 
 
+</div>
 
 
 
 
-{{-- Research Updates --}}
-
-<div class="bg-white rounded-xl shadow p-6">
 
 
-<h2 class="text-xl font-bold mb-5">
-Research Updates
+
+
+
+{{-- Updates --}}
+
+<div class="space-y-5">
+
+
+<h2 class="text-3xl font-bold">
+
+📰 Research Updates
+
 </h2>
 
 
+
+
+
+<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
 
 
 @forelse($updates as $update)
 
 
 
-<div class="border-b pb-4 mb-4">
+<div class="dashboard-card overflow-hidden">
 
 
-<h3 class="text-lg font-semibold">
+
+@if($update->image)
+
+<img
+src="{{ asset('storage/'.$update->image) }}"
+class="w-full h-48 object-cover">
+
+@endif
+
+
+
+
+<div class="p-6">
+
+
+<h3 class="text-xl font-bold">
 
 {{ $update->title }}
 
@@ -172,17 +297,18 @@ Research Updates
 
 
 
-<p>
+<p class="text-slate-500 mt-3">
 
-{{ $update->description }}
+{{ Str::limit($update->description,120) }}
 
 </p>
 
 
 
-<p class="text-sm text-gray-500">
+<p class="text-sm text-slate-500 mt-4">
 
-Published By:
+Published by:
+
 {{ $update->publisher->name ?? 'Unknown' }}
 
 </p>
@@ -192,11 +318,19 @@ Published By:
 
 
 
+</div>
+
+
+
+
 @empty
 
-<p>
+
+<div class="dashboard-card p-6">
+
 No updates available.
-</p>
+
+</div>
 
 
 @endforelse
@@ -206,7 +340,13 @@ No updates available.
 </div>
 
 
+</div>
+
+
+
+
 
 </div>
+
 
 </x-app-layout>
